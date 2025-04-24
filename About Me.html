@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Vicky</title>
+  <style>
+    /* Your existing styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fa;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #3a3d5c;
+      color: #fff;
+      padding: 2rem 1rem 1rem 1rem;
+      text-align: center;
+      position: relative;
+    }
+    header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+    h1 {
+      margin: 0.2em 0 0.1em 0;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+    h2 {
+      color: #3a3d5c;
+      margin-top: 1.5em;
+      text-align: center;
+    }
+    main {
+      flex: 1;
+      max-width: 700px;
+      margin: 2em auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(60,60,100,0.07);
+      padding: 2em;
+    }
+    .about-section {
+      margin: 2em 0;
+      padding: 1.5em;
+      background: #e9eaf6;
+      border-left: 4px solid #3a3d5c;
+      border-radius: 0 8px 8px 0;
+    }
+    .skills-grid {
+      display: grid;
+      gap: 1.2em;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      margin-top: 1.5em;
+    }
+    .skill-card {
+      background: #f8f9fe;
+      padding: 1.2em;
+      border-radius: 6px;
+      border: 1px solid #d6d8ee;
+    }
+    .timeline {
+      border-left: 3px solid #3a3d5c;
+      padding-left: 1.8em;
+      margin: 2em 0;
+      position: relative;
+    }
+    .event {
+      margin: 1.5em 0;
+      position: relative;
+      padding-left: 1.2em;
+    }
+    .event::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 3px solid #3a3d5c;
+      border-radius: 50%;
+      position: absolute;
+      left: -2.05em;
+      top: 0.4em;
+    }
+    .preview-gallery {
+      display: grid;
+      gap: 1.5em;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      margin: 2em 0;
+    }
+    .preview-gallery img {
+      width: 100%;
+      border-radius: 8px;
+      border: 2px solid #e0e3f3;
+    }
+    .math-quote {
+      text-align: center;
+      padding: 1.5em;
+      background: #3a3d5c;
+      color: #fff;
+      border-radius: 12px;
+      margin: 2em 0;
+    }
+    .contact-cta {
+      text-align: center;
+      padding: 2em;
+      background: #e9eaf6;
+      border-radius: 12px;
+      margin: 2em 0;
+    }
+    .contact-cta a {
+      background: #3a3d5c;
+      color: #fff;
+      padding: 0.8em 2em;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    @media (max-width: 600px) {
+      main { padding: 1em; }
+      header { padding: 1em 0.5em; }
+      .preview-gallery { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo">
+    <h1>Vicky</h1>
+    <p>Mathematics Student & Aspiring Web Developer</p>
+    <nav>
+      <ul style="list-style: none; padding: 0; margin: 1em 0 0 0; display: flex; justify-content: center; gap: 2em;">
+        <li><a href="Vicky.html" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a></li>
+        <li><a href="Gallery.html" style="color: #fff; text-decoration: none; font-weight: 500;">Gallery</a></li>
+        <li><a href="About Me.html" style="color: #fff; text-decoration: none; font-weight: 500;">About Me</a></li>
+        <li><a href="My Work.html" style="color: #fff; text-decoration: none; font-weight: 500;">My Work</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>About Me</h2>
+
+    <!-- Core Identity Section -->
+    <section class="about-section">
+      <h3>Who I Am</h3>
+      <p>
+        I'm a mathematics student at Midlands State University, Gweru, Zimbabwe with a passion for problem-solving and creative coding. 
+        My journey blends analytical thinking with design, allowing me to approach challenges from both technical 
+        and artistic perspectives.
+      </p>
+    </section>
+
+    <!-- Skills Matrix -->
+    <section class="about-section">
+      <h3>My Toolkit</h3>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <strong>Mathematics</strong>
+          <p>Calculus | Linear Algebra | Number Theory</p>
+        </div>
+        <div class="skill-card">
+          <strong>Web Development</strong>
+          <p>HTML/CSS | JavaScript | VS Code</p>
+        </div>
+        <div class="skill-card">
+          <strong>Soft Skills</strong>
+          <p>Problem-Solving | Collaborative Coding | Technical Writing</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Academic Journey -->
+    <section class="about-section">
+      <h3>My Path</h3>
+      <div class="timeline">
+        <div class="event">
+          <strong>Graduate Student(2022–Present):</strong> Bachelor of Science Honors Degree in Applied Mathematics and Computational Science (SCITECH02) at MSU<br>
+          <em>Key Courses:</em> Discrete Math, Web Development, Data Structures
+        </div>
+        <div class="event">
+          <strong>Attachment(2024-25):</strong> Statistician at ZIMSTATS in the Demography Department<br>
+          <em>Focus:</em> Mathematical modeling of real-world systems
+        </div>
+      </div>
+    </section>
+
+    <!-- Why I Love Math Section -->
+    <section class="about-section">
+      <h3>Why I Love Math</h3>
+      <div class="math-fact" style="margin-top:1em">
+        <strong>Favorite Theorem:</strong> The Banach-Tarski Paradox and Schrödinger's cat Theory<br>
+        <strong>Current Obsession:</strong> Eulers' Identity<br>
+        <strong>Life Motto:</strong> "Mathematics is the poetry of logical ideas." – Einstein
+      </div>
+      <p>
+        Mathematics represents the purest form of problem-solving - a universal language that reveals hidden patterns
+        and structures in our world. What excites me most is how abstract mathematical concepts find practical
+        applications in web development and technology.
+      </p>
+    </section>
+
+    <!-- Project Previews -->
+    <section class="about-section">
+      <h3>Projects Preview</h3>
+      <div class="preview-gallery">
+        <div>
+          <img src="Math.jpg" alt="Prime Number Visualizer">
+          <p>Prime Number Explorer</p>
+        </div>
+        <div>
+          <img src="Computer.jpg" alt="Web Development Project">
+          <p>Interactive Math Tools</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Math Philosophy -->
+    <section class="math-quote">
+      <blockquote>
+        "Mathematics is not about numbers, equations, or algorithms:<br>
+        it is about understanding." – William Paul Thurston
+      </blockquote>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="contact-cta">
+      <h3>Let's Talk Math & Code!</h3>
+      <p>
+        Want to discuss Euler's identity or collaborate on a project?
+      </p>
+      <a href="mailto:your.email@example.com">Get in Touch</a>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Vicky. Made with passion for math & code.
+  </footer>
+</body>
+</html>
