@@ -3,232 +3,266 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vicky the Mathematician & Web Developer</title>
+  <title>Vicky's Animated Math Universe</title>
   <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+
     body {
       margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f6fa;
-      color: #222;
-      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: white;
       overflow-x: hidden;
-      position: relative;
     }
-    header {
-      background: #3a3d5c;
-      color: #fff;
-      padding: 2rem 1rem 1rem 1rem;
+
+    /* --- Get Started Section --- */
+    .get-started-section {
+      background: rgba(44, 62, 80, 0.95);
+      padding: 2rem;
       text-align: center;
-      position: relative;
-      z-index: 2;
+      backdrop-filter: blur(10px);
     }
-    header img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      margin-bottom: 1rem;
-      object-fit: cover;
-      animation: popIn 1s ease-out forwards;
+    .get-started-section h2 {
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, #9b59b6, #3498db);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
     }
-    @keyframes popIn {
-      0% { transform: scale(0); opacity: 0; }
-      80% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
+    .get-started-section p {
+      font-size: 1.2rem;
+      color: #ecf0f1;
+      margin-bottom: 1.5rem;
     }
-    h1 {
-      margin: 0.2em 0 0.1em 0;
-      font-size: 2.2em;
-      letter-spacing: 1px;
-      opacity: 0;
-      animation: fadeIn 1s 0.5s forwards;
+    .get-started-section a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(45deg, #3498db, #9b59b6);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: var(--glow);
+      transition: background 0.3s;
     }
-    @keyframes fadeIn {
-      to { opacity: 1; }
+    .get-started-section a:hover {
+      background: linear-gradient(45deg, #9b59b6, #3498db);
     }
-    main {
-      flex: 1;
-      max-width: 700px;
-      margin: 2em auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(60,60,100,0.07);
-      padding: 2em;
-      position: relative;
-      z-index: 2;
-      animation: slideUp 1s 1s forwards;
-      opacity: 0;
-      transform: translateY(30px);
-      text-align: center; /* Added centering */
-    }
-    main h2 {
-      margin: 0 auto 1em auto;
-      color: #3a3d5c; /* Changed from black to match theme */
-      font-size: 1.8em;
-      max-width: 90%;
-    }
-    @keyframes slideUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .math-fact {
-      background: #e9eaf6;
-      border-left: 4px solid #3a3d5c;
-      padding: 1em;
-      margin: 1.5em 0;
-      font-style: italic;
-      color: #2a2d4c;
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
       position: relative;
       overflow: hidden;
-      text-align: left; /* Reset to left for content */
     }
-    .math-fact::before {
+
+    .hero::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transform: translateX(-100%);
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(155, 89, 182, 0.1) 10%, transparent 10%);
+      background-size: 30px 30px;
+      animation: moveDots 100s linear infinite;
     }
-    .math-fact:hover::before {
-      animation: shine 1.5s;
+
+    @keyframes moveDots {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-50%,-50%); }
     }
-    @keyframes shine {
-      100% { transform: translateX(100%); }
+
+    h1 {
+      font-size: 4rem;
+      background: linear-gradient(45deg, #9b59b6, #3498db);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: float 5s ease-in-out infinite;
     }
-    .euler {
-      font-size: 1.2em;
+
+    .animated-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 4rem;
+      position: relative;
+    }
+
+    .math-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .math-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--glow);
+      background: rgba(155, 89, 182, 0.2);
+    }
+
+    .euler-glow {
+      font-size: 2rem;
       text-align: center;
-      margin: 1em 0;
-      font-weight: 600;
-      color: #2a2d4c;
-      transform: scale(0.9);
-      transition: transform 0.3s;
+      padding: 2rem;
+      background: linear-gradient(45deg, #9b59b6, #3498db);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: float 4s ease-in-out infinite;
     }
-    .euler:hover {
-      transform: scale(1.05);
-    }
-    footer {
-      background: #3a3d5c;
-      color: #fff;
-      text-align: center;
-      padding: 1em 0;
-      font-size: 1em;
-    }
-    .floating-symbols {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .symbol {
+
+    .animated-path {
       position: absolute;
-      font-size: 24px;
-      opacity: 0;
-      animation: float 8s linear infinite;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
     }
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.2; }
-      90% { opacity: 0.2; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+
+    .path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: dash 30s linear infinite;
     }
-    @media (max-width: 600px) {
-      main { padding: 1em; }
-      header { padding: 1em 0.5em; }
-      main h2 {
-        font-size: 1.5em;
-      }
+
+    @keyframes dash {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .floating-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.3;
+      animation: float 6s ease-in-out infinite;
+      /* Added critical fixes: */
+      width: 100px !important;
+      height: 100px !important;
+      object-fit: contain;
+    }
+
+    .shape1 { top: 20%; left: 5%; animation-duration: 7s; }
+    .shape2 { top: 50%; right: 10%; animation-duration: 9s; width: 80px; }
+    .shape3 { bottom: 10%; left: 20%; animation-duration: 11s; width: 120px; }
+
+    footer {
+      background: rgba(44, 62, 80, 0.95);
+      padding: 2rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .animated-grid { padding: 1rem; }
+      .math-card { padding: 1rem; }
+      .get-started-section h2 { font-size: 1.5rem; }
+      .shape { width: 60px !important; height: 60px !important; }
+      .shape2 { width: 50px; }
+      .shape3 { width: 80px; }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="floating-symbols" id="symbolsContainer"></div>
-  
-  <header>
-    <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo">
-    <h1>Vicky</h1>
-    <p>Mathematics Student & Aspiring Web Developer</p>
-    <nav>
-      <ul style="list-style: none; padding: 0; margin: 1em 0 0 0; display: flex; justify-content: center; gap: 2em;">
-        <li><a href="Vicky.html" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a></li>
-        <li><a href="Gallery.html" style="color: #fff; text-decoration: none; font-weight: 500;">Gallery</a></li>
-        <li><a href="About Me.html" style="color: #fff; text-decoration: none; font-weight: 500;">About Me</a></li>
-        <li><a href="My Work.html" style="color: #fff; text-decoration: none; font-weight: 500;">My Work</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main>
-    <h2>Welcome!</h2>
-    <p>
-      Hi, I'm Vicky. I love exploring the beauty of mathematics and bringing ideas to life through web development. Whether it's solving equations or building interactive websites, I'm always up for a challenge!
-    </p>
+  <!-- Get Started Section -->
+  <section class="get-started-section">
+    <h2>Get Started</h2>
+    <p>Jump right in! Scroll down to explore interactive math visualizations and discover the beauty of equations in motion.</p>
+    <a href="Home.html">Explore Now</a>
+  </section>
+
+  <!-- Hero Section with Fixed Images -->
+  <section class="hero" id="explore">
+    <h1>Where Math Meets Motion</h1>
+    <p>Exploring the beauty of equations through interactive design</p>
     
-    <div class="math-fact">
-      <strong>Did you know?</strong>  
-      The identity <span class="euler">e<sup>iπ</sup> + 1 = 0</span> is considered the most beautiful equation in mathematics. It connects:
-      <ul>
-        <li><strong>e</strong> (base of natural logarithms)</li>
-        <li><strong>i</strong> (imaginary unit)</li>
-        <li><strong>π</strong> (pi)</li>
-        <li><strong>1</strong> (multiplicative identity)</li>
-        <li><strong>0</strong> (additive identity)</li>
-      </ul>
-      This single equation elegantly unites five fundamental mathematical constants!
+    <div class="floating-shapes">
+      <img src="atom.svg" alt="atom" class="shape shape1">
+      <img src="function.svg" alt="function" class="shape shape2">
+      <img src="calculator.svg" alt="calculator" class="shape shape3">
     </div>
-    
-    <p>
-      Check back soon for more of my projects, mathematical musings, and web experiments!
-    </p>
-  </main>
-  
+  </section>
+
+  <!-- Content Grid -->
+  <section class="animated-grid">
+    <div class="math-card">
+      <h2>Fractal Explorer</h2>
+      <p>Interactive Mandelbrot set visualization with real-time zoom</p>
+      <div class="euler-glow" onclick="this.classList.toggle('animated')">
+        z → z² + c
+      </div>
+    </div>
+
+    <div class="math-card">
+      <h2>Topology Playground</h2>
+      <p>Möbius strip transformations and surface morphing</p>
+      <div class="euler-glow">
+        e<sup>iπ</sup> + 1 = 0
+      </div>
+    </div>
+
+    <div class="math-card">
+      <h2>Quantum Simulator</h2>
+      <p>Visualize wave functions and probability densities</p>
+      <div class="euler-glow">
+        Ψ(x,t) = ψ(x)φ(t)
+      </div>
+    </div>
+  </section>
+
+  <!-- Animated Path -->
+  <svg class="animated-path" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+    <path class="path" fill="none" stroke="rgba(155,89,182,0.2)" stroke-width="50" d="M0,320L48,298.7C96,277,192,235,288,213.3C384,192,480,192,576,202.7C672,213,768,235,864,234.7C960,235,1056,213,1152,202.7C1248,192,1344,192,1392,192L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+  </svg>
+
+  <!-- Footer -->
   <footer>
-    &copy; 2025 Vicky. Made with passion for math & code.
+    <p>&copy; 2025 Vicky's Animated Math Universe | Where Equations Come Alive</p>
   </footer>
 
+  <!-- JavaScript -->
   <script>
-    // Floating Math Symbols Animation
-    const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
-    const container = document.getElementById('symbolsContainer');
-    
-    function createSymbol() {
-      const symbol = document.createElement('div');
-      symbol.className = 'symbol';
-      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-      symbol.style.left = Math.random() * 100 + 'vw';
-      symbol.style.animationDuration = 5 + Math.random() * 5 + 's';
-      symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
-      symbol.style.color = `hsl(${Math.random() * 60 + 200}, 30%, 50%)`;
-      container.appendChild(symbol);
-      
-      setTimeout(() => {
-        symbol.remove();
-      }, 8000);
-    }
-    
-    // Create initial symbols
-    for (let i = 0; i < 15; i++) {
-      setTimeout(createSymbol, i * 500);
-    }
-    
-    // Continuous symbol creation
-    setInterval(createSymbol, 1500);
-
-    // Math fact hover animation
-    const mathFact = document.querySelector('.math-fact');
-    mathFact.addEventListener('mouseenter', () => {
-      mathFact.style.transform = 'translateY(-5px)';
-      mathFact.style.boxShadow = '0 8px 20px rgba(58, 61, 92, 0.15)';
-    });
-    
-    mathFact.addEventListener('mouseleave', () => {
-      mathFact.style.transform = '';
-      mathFact.style.boxShadow = '';
+    // Interactive glow effect
+    const cards = document.querySelectorAll('.math-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
     });
   </script>
 </body>
