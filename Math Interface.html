@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmic Math Interface</title>
+  <meta name="description" content="Advanced mathematical visualization in a cosmic environment">
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    :root {
+      --star-white: #f0f0ff;
+      --quantum-blue: #00e1ff;
+      --neutron-purple: #bd00ff;
+      --black-hole: #000;
+      --event-horizon: #1a1a2e;
+      --accretion-disk: #ff00aa;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at center, var(--black-hole), var(--event-horizon));
+      color: var(--star-white);
+      font-family: 'Orbitron', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #cosmic-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--star-white);
+      border-radius: 50%;
+      box-shadow: 0 0 5px var(--quantum-blue);
+      animation: twinkle 3s infinite ease-in-out;
+      transform-origin: center;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1);}
+      50% { opacity: 1; transform: scale(1.7);}
+    }
+    #math-universe {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    #cosmic-header {
+      position: relative;
+      margin-bottom: 5rem;
+    }
+    h1 {
+      font-size: 4rem;
+      background: linear-gradient(45deg, var(--quantum-blue), var(--accretion-disk));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 20px var(--quantum-blue);
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1.4rem;
+      color: var(--star-white);
+      text-shadow: 0 0 10px var(--quantum-blue);
+      max-width: 800px;
+    }
+    #equation-orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 800px;
+      height: 800px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .equation {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: var(--quantum-blue);
+      white-space: nowrap;
+      text-shadow: 0 0 5px var(--quantum-blue);
+      will-change: transform;
+    }
+    #universe-viz {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      margin: 5rem 0;
+    }
+    canvas#universe-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #quantum-controls {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 20;
+    }
+    .control-btn {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--quantum-blue);
+      color: var(--quantum-blue);
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    .control-btn:hover {
+      background: var(--quantum-blue);
+      color: var(--black-hole);
+      box-shadow: 0 0 20px var(--quantum-blue);
+    }
+    #cosmic-ai {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      max-width: 90vw;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid var(--quantum-blue);
+      border-radius: 10px;
+      padding: 1.5rem;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px var(--quantum-blue);
+      transform: translate(-50%, -50%);
+    }
+    #ai-voice-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--quantum-blue);
+      color: var(--black-hole);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    #ai-voice-btn:hover {
+      background: var(--accretion-disk);
+      color: var(--star-white);
+    }
+    #ai-output {
+      margin-top: 1rem;
+      height: 200px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    .math-result {
+      color: var(--accretion-disk);
+      font-weight: bold;
+      text-shadow: 0 0 10px var(--accretion-disk);
+      display: block;
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+    .response.error {
+      color: #ff4444;
+      text-shadow: 0 0 10px #ff4444;
+    }
+    #math-quotes {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      max-width: 320px;
+      background: rgba(10, 20, 40, 0.75);
+      color: var(--star-white);
+      border-left: 4px solid var(--quantum-blue);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem 1.2rem 1.2rem;
+      z-index: 50;
+      font-family: 'Orbitron', 'Courier New', monospace;
+      box-shadow: 0 0 16px var(--quantum-blue);
+      animation: fadeInQuotes 1s;
+    }
+    #math-quote-text {
+      font-size: 1.1rem;
+      font-style: italic;
+      margin-bottom: 0.7rem;
+      line-height: 1.4;
+    }
+    #math-quote-author {
+      font-size: 0.95rem;
+      color: var(--quantum-blue);
+      text-align: right;
+    }
+    @keyframes fadeInQuotes {
+      from { opacity: 0; transform: translateY(-20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .subtitle { font-size: 1.1rem; }
+      #cosmic-ai { width: 90vw; padding: 1rem;}
+      #quantum-controls { flex-direction: column; left: 1rem; }
+      #equation-orbit { width: 90vw; height: 90vw; }
+      #math-quotes {
+        top: 0.5rem;
+        left: 0.5rem;
+        max-width: 95vw;
+        padding: 0.8rem 1rem 0.8rem 0.8rem;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cosmic Background -->
+  <div id="cosmic-bg"></div>
+  <!-- Math Quotes -->
+  <div id="math-quotes">
+    <div id="math-quote-text"></div>
+    <div id="math-quote-author"></div>
+  </div>
+  <!-- Equation Orbit -->
+  <div id="equation-orbit"></div>
+  <!-- Main Interface -->
+  <div id="math-universe">
+    <!-- Header -->
+    <div id="cosmic-header">
+      <h1>Cosmic Math Interface</h1>
+      <p class="subtitle">Where Numbers Dance Across Dimensions</p>
+    </div>
+    <!-- 3D Visualization -->
+    <div id="universe-viz">
+      <canvas id="universe-canvas"></canvas>
+    </div>
+    <!-- Quantum Controls -->
+    <div id="quantum-controls">
+      <button class="control-btn" id="quantum-fluctuate">Fluctuate</button>
+      <button class="control-btn" id="gravity-toggle">Gravity On/Off</button>
+      <button class="control-btn" id="dark-energy">Dark Energy</button>
+    </div>
+    <!-- AI Assistant -->
+    <div id="cosmic-ai">
+      <button id="ai-voice-btn">Activate Voice Assistant</button>
+      <div id="ai-output"></div>
+    </div>
+  </div>
+  <script>
+    // --- Cosmic Background Starfield ---
+    const cosmicBG = document.getElementById('cosmic-bg');
+    for(let i=0; i<500; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${Math.random() * 2 + 1}s`;
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.transform = `scale(${0.7 + Math.random() * 1.5})`;
+      cosmicBG.appendChild(star);
+    }
+
+    // --- Math Quotes ---
+    const mathQuotes = [
+      {
+        text: "Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding.",
+        author: "- William Paul Thurston"
+      },
+      {
+        text: "Pure mathematics is, in its way, the poetry of logical ideas.",
+        author: "- Albert Einstein"
+      },
+      {
+        text: "Mathematics has beauty and romance. It's not a boring place to be, the mathematical world. It's an extraordinary place; it's worth spending time there.",
+        author: "- Marcus du Sautoy"
+      },
+      {
+        text: "Mathematics is the most beautiful and most powerful creation of the human spirit.",
+        author: "- Stefan Banach"
+      },
+      {
+        text: "The essence of mathematics is not to make simple things complicated, but to make complicated things simple.",
+        author: "- Stan Gudder"
+      },
+      {
+        text: "Mathematics rightly viewed possesses not only truth but supreme beauty.",
+        author: "- Bertrand Russell"
+      },
+      {
+        text: "Without mathematics, there's nothing you can do. Everything around you is mathematics. Everything around you is numbers.",
+        author: "- Shakuntala Devi"
+      },
+      {
+        text: "Obvious is the most dangerous word in mathematics.",
+        author: "- Eric Temple Bell"
+      },
+      {
+        text: "The study of mathematics, like the Nile, begins in minuteness but ends in magnificence.",
+        author: "- Charles Caleb Colton"
+      },
+      {
+        text: "Mathematics is the music of reason.",
+        author: "- James Joseph Sylvester"
+      }
+    ];
+
+    let currentQuote = 0;
+    function showMathQuote() {
+      const textDiv = document.getElementById('math-quote-text');
+      const authorDiv = document.getElementById('math-quote-author');
+      const quote = mathQuotes[currentQuote];
+      textDiv.textContent = `"${quote.text}"`;
+      authorDiv.textContent = quote.author;
+      currentQuote = (currentQuote + 1) % mathQuotes.length;
+    }
+    showMathQuote();
+    setInterval(showMathQuote, 9000); // Change quote every 9 seconds
+
+    // --- Orbiting Equations with GSAP ---
+    const equationOrbit = document.getElementById('equation-orbit');
+    const equations = [
+      "∇·E = ρ/ε₀", "∇×E = -∂B/∂t", 
+      "iℏ∂ψ/∂t = Ĥψ", "ds² = -(1-2GM/r)dt² + (1-2GM/r)⁻¹dr²",
+      "F = G(m₁m₂)/r²", "E = mc²", "H = Σ(pᵢq̇ᵢ) - L",
+      "∫M dω = ∫∂M ω", "ψ(x) = ⟨x|ψ⟩", "S = -Tr(ρ ln ρ)"
+    ];
+    const eqElements = [];
+    equations.forEach((eq, i) => {
+      const element = document.createElement('div');
+      element.className = 'equation';
+      element.textContent = eq;
+      equationOrbit.appendChild(element);
+      eqElements.push(element);
+    });
+
+    // Animate equations in circular orbit using GSAP
+    function animateEquations() {
+      const center = 400;
+      const radius = 320;
+      eqElements.forEach((el, i) => {
+        const duration = 30 + Math.random() * 20;
+        gsap.to(el, {
+          repeat: -1,
+          ease: "none",
+          motionPath: {
+            path: Array.from({length: 361}, (_, deg) => {
+              const rad = (deg + (i * 360 / eqElements.length)) * Math.PI / 180;
+              return {
+                x: center + radius * Math.cos(rad),
+                y: center + radius * Math.sin(rad)
+              };
+            }),
+            curviness: 1,
+            autoRotate: false
+          },
+          duration: duration
+        });
+      });
+    }
+    animateEquations();
+
+    // --- 3D Visualization Setup ---
+    const universeCanvas = document.getElementById('universe-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: universeCanvas, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    // Gravitational well geometry
+    const geometry = new THREE.ParametricGeometry(function(u, v, target) {
+      const r = 5 + 3 * Math.sin(u * Math.PI);
+      const theta = v * 2 * Math.PI;
+      const G = 9.8;
+      const M = 5;
+      const distortion = (G * M) / (r * r);
+      target.x = r * Math.cos(theta);
+      target.y = r * Math.sin(theta);
+      target.z = distortion * Math.sin(u * Math.PI);
+    }, 100, 100);
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00e1ff,
+      wireframe: true,
+      emissive: 0x00e1ff,
+      emissiveIntensity: 0.3,
+      metalness: 0.9,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.8
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // Particle system with color pulsation
+    const particleGeometry = new THREE.BufferGeometry();
+    const particleCount = 10000;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    for(let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 200;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      colors[i * 3] = Math.random();
+      colors[i * 3 + 1] = Math.random();
+      colors[i * 3 + 2] = 1; // cosmic blue tint
+    }
+
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.2,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.7,
+      sizeAttenuation: true
+    });
+
+    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particles);
+
+    // Lighting
+    const pointLight = new THREE.PointLight(0x00e1ff, 2, 100);
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    const ambientLight = new THREE.AmbientLight(0x003344, 0.5);
+    scene.add(ambientLight);
+
+    camera.position.z = 15;
+
+    // --- Animation loop with improved dynamics ---
+    let gravityEnabled = true;
+    const particleSpeed = [];
+    for(let i = 0; i < particleCount; i++) {
+      particleSpeed.push(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.1,
+        (Math.random() - 0.5) * 0.1,
+        (Math.random() - 0.5) * 0.1
+      ));
+    }
+
+    let camAngle = 0;
+    function animateUniverse() {
+      requestAnimationFrame(animateUniverse);
+      mesh.rotation.x += 0.001;
+      mesh.rotation.y += 0.002;
+
+      // Subtle camera orbit for depth
+      camAngle += 0.001;
+      camera.position.x = 15 * Math.sin(camAngle);
+      camera.position.z = 15 * Math.cos(camAngle);
+      camera.lookAt(scene.position);
+
+      // Particle movement with damping and color pulse
+      const pos = particles.geometry.attributes.position.array;
+      const col = particles.geometry.attributes.color.array;
+      const time = Date.now() * 0.001;
+      for(let i = 0; i < particleCount; i++) {
+        if(gravityEnabled) {
+          const dx = -pos[i * 3];
+          const dy = -pos[i * 3 + 1];
+          const dz = -pos[i * 3 + 2];
+          const distance = Math.sqrt(dx*dx + dy*dy + dz*dz) + 0.1;
+          const force = 0.0001 / (distance * distance);
+          particleSpeed[i].x += dx * force;
+          particleSpeed[i].y += dy * force;
+          particleSpeed[i].z += dz * force;
+        }
+        // Damping for smoothness
+        particleSpeed[i].x *= 0.98;
+        particleSpeed[i].y *= 0.98;
+        particleSpeed[i].z *= 0.98;
+        pos[i * 3] += particleSpeed[i].x;
+        pos[i * 3 + 1] += particleSpeed[i].y;
+        pos[i * 3 + 2] += particleSpeed[i].z;
+
+        // Color pulse for twinkle
+        const pulse = 0.5 + 0.5 * Math.sin(time * 5 + i);
+        col[i * 3] = pulse;
+        col[i * 3 + 1] = pulse;
+        col[i * 3 + 2] = 1;
+      }
+      particles.geometry.attributes.position.needsUpdate = true;
+      particles.geometry.attributes.color.needsUpdate = true;
+
+      renderer.render(scene, camera);
+    }
+    animateUniverse();
+
+    // --- Quantum Controls ---
+    document.getElementById('quantum-fluctuate').addEventListener('click', () => {
+      const pos = particles.geometry.attributes.position.array;
+      for(let i = 0; i < particleCount; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 200;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 200;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      }
+      particles.geometry.attributes.position.needsUpdate = true;
+    });
+
+    document.getElementById('gravity-toggle').addEventListener('click', () => {
+      gravityEnabled = !gravityEnabled;
+    });
+
+    document.getElementById('dark-energy').addEventListener('click', () => {
+      for(let i = 0; i < particleCount; i++) {
+        particleSpeed[i].x *= 1.5;
+        particleSpeed[i].y *= 1.5;
+        particleSpeed[i].z *= 1.5;
+      }
+    });
+
+    // --- Voice Assistant with Math Evaluation ---
+    const aiOutput = document.getElementById('ai-output');
+    const voiceBtn = document.getElementById('ai-voice-btn');
+    let recognition;
+
+    if('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        aiOutput.innerHTML += `<div class="query">You: ${transcript}</div>`;
+        try {
+          // Enhanced math processing
+          const processedQuery = transcript
+            .toLowerCase()
+            .replace(/plus/g, '+')
+            .replace(/minus/g, '-')
+            .replace(/times/g, '*')
+            .replace(/x/g, '*')
+            .replace(/multiplied by/g, '*')
+            .replace(/divided by/g, '/')
+            .replace(/over/g, '/')
+            .replace(/square root of/g, 'sqrt')
+            .replace(/squared/g, '**2')
+            .replace(/cubed/g, '**3')
+            .replace(/\^/g, '**')
+            .replace(/pi/g, Math.PI)
+            .replace(/π/g, Math.PI)
+            .replace(/(\d+)\s+(\d+)/g, '$1$2')
+            .replace(/[^0-9\+\-\*\/\.\s\(\)sqrtPIπ]/g, '');
+
+          const safeEval = (expr) => {
+            const allowed = /^[\d\s\+\-\*\/\.\(\)sqrtPIπ]+$/;
+            if(!allowed.test(expr)) throw new Error('Unsafe operation');
+            const context = {
+              sqrt: Math.sqrt,
+              sin: Math.sin,
+              cos: Math.cos,
+              tan: Math.tan,
+              PI: Math.PI,
+              π: Math.PI,
+              pow: Math.pow,
+              log: Math.log
+            };
+            return Function(...Object.keys(context), `return (${expr})`)(
+              ...Object.values(context)
+            );
+          };
+
+          const result = safeEval(processedQuery);
+
+          aiOutput.innerHTML += `
+            <div class="response">
+              AI: Mathematical Result: 
+              <span class="math-result">${transcript} = ${result}</span>
+              <lottie-player
+                src="https://assets10.lottiefiles.com/packages/lf20_obhph3sh.json"
+                background="transparent"
+                speed="1"
+                style="width: 100px; height: 100px; display: inline-block; vertical-align: middle;"
+                loop autoplay>
+              </lottie-player>
+            </div>`;
+
+          // Visual feedback in 3D scene
+          const geometry = new THREE.TetrahedronGeometry(Math.log(Math.abs(result) + 1));
+          const material = new THREE.MeshStandardMaterial({
+            color: 0xff00aa,
+            emissive: 0xff0066,
+            metalness: 0.8,
+            roughness: 0.2
+          });
+          const mathShape = new THREE.Mesh(geometry, material);
+          mathShape.position.set(
+            (Math.random() - 0.5) * 50,
+            (Math.random() - 0.5) * 50,
+            (Math.random() - 0.5) * 50
+          );
+          scene.add(mathShape);
+          gsap.to(mathShape.scale, { x: 0, y: 0, z: 0, duration: 2, delay: 2, onComplete: () => {
+            scene.remove(mathShape);
+          }});
+        } catch (e) {
+          aiOutput.innerHTML += `<div class="response error">AI: Sorry, I couldn't compute that.</div>`;
+        }
+        aiOutput.scrollTop = aiOutput.scrollHeight;
+      };
+
+      voiceBtn.onclick = () => recognition.start();
+    } else {
+      voiceBtn.disabled = true;
+      voiceBtn.textContent = "Voice Assistant Not Supported";
+    }
+
+    // --- Responsive resize ---
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
