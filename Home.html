@@ -1,176 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vicky the Mathematician & Web Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f6fa;
-      color: #222;
-      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
       overflow-x: hidden;
+      min-height: 100vh;
       position: relative;
     }
-    header {
-      background: #3a3d5c;
-      color: #fff;
-      padding: 2rem 1rem 1rem 1rem;
+
+    /* Floating animation */
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* Pulse (scale) animation */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.15); }
+    }
+
+    /* Glow text animation */
+    @keyframes glowPulse {
+      0%, 100% {
+        text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);
+      }
+      50% {
+        text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);
+      }
+    }
+
+    /* Floating math symbols animation */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.2;
+      }
+      90% {
+        opacity: 0.2;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Header / Hero */
+    header.hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
       text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-    header img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      margin-bottom: 1rem;
-      object-fit: cover;
-      animation: popIn 1s ease-out forwards;
-    }
-    @keyframes popIn {
-      0% { transform: scale(0); opacity: 0; }
-      80% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    h1 {
-      margin: 0.2em 0 0.1em 0;
-      font-size: 2.2em;
-      letter-spacing: 1px;
-      opacity: 0;
-      animation: fadeIn 1s 0.5s forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    main {
-      flex: 1;
-      max-width: 700px;
-      margin: 2em auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(60,60,100,0.07);
-      padding: 2em;
-      position: relative;
-      z-index: 2;
-      animation: slideUp 1s 1s forwards;
-      opacity: 0;
-      transform: translateY(30px);
-      text-align: center; /* Added centering */
-    }
-    main h2 {
-      margin: 0 auto 1em auto;
-      color: #3a3d5c; /* Changed from black to match theme */
-      font-size: 1.8em;
-      max-width: 90%;
-    }
-    @keyframes slideUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .math-fact {
-      background: #e9eaf6;
-      border-left: 4px solid #3a3d5c;
-      padding: 1em;
-      margin: 1.5em 0;
-      font-style: italic;
-      color: #2a2d4c;
-      position: relative;
+      padding: 0 1rem 4rem 1rem; /* extra bottom padding for nav */
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
       overflow: hidden;
-      text-align: left; /* Reset to left for content */
+      z-index: 1;
     }
-    .math-fact::before {
-      content: '';
-      position: absolute;
-      top: 0;
+
+    /* Profile picture styles with pulse and float */
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--neon-accent);
+      box-shadow: 0 0 15px var(--neon-accent);
+      object-fit: cover;
+      margin-bottom: 1rem;
+      animation: float 6s ease-in-out infinite, pulse 2.5s ease-in-out infinite;
+      user-select: none;
+      will-change: transform;
+    }
+
+    header.hero h1 {
+      font-size: 4rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: float 5s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
+      margin: 0 0 0.25rem 0;
+      user-select: none;
+      font-weight: 700;
+    }
+
+    header.hero .subtitle {
+      font-size: 1.5rem;
+      color: #ccc;
+      margin: 0 0 2rem 0;
+      user-select: none;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      border-right: 2px solid #9b59b6; /* cursor */
+      padding-right: 5px;
+      overflow: hidden;
+      width: fit-content;
+      max-width: 100%;
+      animation: blinkCursor 1s steps(2, start) infinite;
+    }
+
+    /* Blinking cursor */
+    @keyframes blinkCursor {
+      0%, 50% { border-color: #9b59b6; }
+      51%, 100% { border-color: transparent; }
+    }
+
+    /* Navigation Bar */
+    nav.navbar {
+      position: fixed;
+      bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transform: translateX(-100%);
+      background: rgba(58, 61, 92, 0.9);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      z-index: 10;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+      height: 56px;
+      line-height: 56px;
     }
-    .math-fact:hover::before {
-      animation: shine 1.5s;
+
+    nav.navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      margin: 0;
+      padding: 0;
     }
-    @keyframes shine {
-      100% { transform: translateX(100%); }
-    }
-    .euler {
-      font-size: 1.2em;
-      text-align: center;
-      margin: 1em 0;
+
+    nav.navbar ul li a {
+      color: white;
+      text-decoration: none;
       font-weight: 600;
-      color: #2a2d4c;
-      transform: scale(0.9);
-      transition: transform 0.3s;
+      font-size: 1.1rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      transition: background 0.3s;
+      user-select: none;
+      cursor: pointer;
     }
-    .euler:hover {
-      transform: scale(1.05);
+
+    nav.navbar ul li a:hover,
+    nav.navbar ul li a:focus {
+      background: var(--neon-accent);
+      color: var(--dark-bg);
+      outline: none;
     }
-    footer {
-      background: #3a3d5c;
-      color: #fff;
-      text-align: center;
-      padding: 1em 0;
-      font-size: 1em;
+
+    /* Floating shapes */
+    .floating-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 0;
     }
-    .floating-symbols {
+
+    .shape {
+      position: absolute;
+      opacity: 0.3;
+      animation: float 6s ease-in-out infinite;
+      user-select: none;
+      filter: drop-shadow(0 0 2px rgba(155, 89, 182, 0.7));
+    }
+    .shape1 {
+      top: 20%;
+      left: 5%;
+      width: 100px;
+      height: 100px;
+      animation-duration: 7s;
+    }
+    .shape2 {
+      top: 50%;
+      right: 10%;
+      width: 80px;
+      height: 80px;
+      animation-duration: 9s;
+    }
+    .shape3 {
+      bottom: 10%;
+      left: 20%;
+      width: 120px;
+      height: 120px;
+      animation-duration: 11s;
+    }
+
+    /* Floating math symbols container */
+    #symbolsContainer {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
-      z-index: 1;
+      overflow: hidden;
+      z-index: 0;
     }
+
     .symbol {
       position: absolute;
       font-size: 24px;
       opacity: 0;
-      animation: float 8s linear infinite;
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      user-select: none;
+      color: hsl(260, 50%, 70%);
+      text-shadow: 0 0 5px hsl(260, 70%, 80%);
     }
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.2; }
-      90% { opacity: 0.2; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+
+    /* Main content */
+    main {
+      max-width: 900px;
+      margin: 2rem auto 6rem auto; /* bottom margin to avoid nav overlap */
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      padding: 2.5rem 2rem;
+      box-shadow: var(--glow);
+      color: white;
+      position: relative;
+      z-index: 2;
     }
-    @media (max-width: 600px) {
-      main { padding: 1em; }
-      header { padding: 1em 0.5em; }
+
+    main h2 {
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      user-select: none;
+    }
+
+    main p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      user-select: text;
+    }
+
+    /* Math fact card */
+    .math-fact {
+      background: rgba(255, 255, 255, 0.15);
+      border-left: 5px solid var(--neon-accent);
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      font-style: italic;
+      color: #ddd;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: default;
+      user-select: text;
+    }
+    .math-fact:hover {
+      box-shadow: 0 0 20px var(--neon-accent);
+      transform: translateY(-8px);
+      background: rgba(155, 89, 182, 0.25);
+    }
+    .math-fact::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+    .math-fact:hover::before {
+      animation: shine 1.5s forwards;
+    }
+    @keyframes shine {
+      100% { transform: translateX(100%); }
+    }
+
+    /* Euler equation style */
+    .euler {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--neon-accent);
+      text-align: center;
+      margin: 1rem 0 1.5rem 0;
+      user-select: text;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    .euler:hover {
+      transform: scale(1.1);
+      text-shadow: 0 0 10px var(--neon-accent);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--math-purple);
+      color: white;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 1rem;
+      user-select: none;
+      position: relative;
+      margin-bottom: 56px; /* Push footer above nav bar */
+      z-index: 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header.hero h1 {
+        font-size: 2.5rem;
+      }
+      header.hero .subtitle {
+        font-size: 1.2rem;
+      }
+      .profile-pic {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 0.75rem;
+      }
+      main {
+        margin: 1rem 1rem 6rem 1rem;
+        padding: 1.5rem 1rem;
+      }
       main h2 {
-        font-size: 1.5em;
+        font-size: 1.8rem;
+      }
+      .shape1 {
+        width: 60px;
+        height: 60px;
+      }
+      .shape2 {
+        width: 50px;
+        height: 50px;
+      }
+      .shape3 {
+        width: 80px;
+        height: 80px;
+      }
+      nav.navbar ul {
+        gap: 1rem;
+      }
+      nav.navbar ul li a {
+        font-size: 1rem;
+      }
+    }
+
+    /* Small mobile */
+    @media (max-width: 400px) {
+      nav.navbar ul {
+        gap: 0.5rem;
+      }
+      nav.navbar ul li a {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.4rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="floating-symbols" id="symbolsContainer"></div>
-  
-  <header>
-    <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo">
-    <h1><a href="Vicky.html" style="color: #fff; text-decoration: none; font-weight: 500;">Vicky</a></h1>
-    <p>Mathematics Student & Aspiring Web Developer</p>
-    <nav>
-      <ul style="list-style: none; padding: 0; margin: 1em 0 0 0; display: flex; justify-content: center; gap: 2em;">
-        <li><a href="Home.html" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a></li>
-        <li><a href="Gallery.html" style="color: #fff; text-decoration: none; font-weight: 500;">Gallery</a></li>
-        <li><a href="About Me.html" style="color: #fff; text-decoration: none; font-weight: 500;">About Me</a></li>
-        <li><a href="My Work.html" style="color: #fff; text-decoration: none; font-weight: 500;">My Work</a></li>
-      </ul>
-    </nav>
+  <header class="hero" id="home" role="banner">
+    <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo" class="profile-pic" />
+    <h1>Vicky</h1>
+    <p class="subtitle"><span id="typing"></span></p>
+
+    <div class="floating-shapes" aria-hidden="true">
+      <img src="atom.svg" alt="" class="shape shape1" />
+      <img src="function.svg" alt="" class="shape shape2" />
+      <img src="calculator.svg" alt="" class="shape shape3" />
+    </div>
   </header>
-  
-  <main>
-    <h2><a href="Math Interface.html" style="color: #3a3d5c; text-decoration: none; font-weight: 500;">Welcome!</a></h2>
+
+  <main role="main">
+    <h2>Welcome!</h2>
     <p>
       Hi, I'm Vicky. I love exploring the beauty of mathematics and bringing ideas to life through web development. Whether it's solving equations or building interactive websites, I'm always up for a challenge!
     </p>
-    
-    <div class="math-fact">
-      <strong>Did you know?</strong>  
+
+    <div class="math-fact" tabindex="0" aria-label="Math fact about Euler's identity">
+      <strong>Did you know?</strong><br />
       The identity <span class="euler">e<sup>iπ</sup> + 1 = 0</span> is considered the most beautiful equation in mathematics. It connects:
       <ul>
         <li><strong>e</strong> (base of natural logarithms)</li>
@@ -181,21 +425,33 @@
       </ul>
       This single equation elegantly unites five fundamental mathematical constants!
     </div>
-    
+
     <p>
       Check back soon for more of my projects, mathematical musings, and web experiments!
     </p>
   </main>
-  
+
+  <nav class="navbar" role="navigation" aria-label="Primary Navigation">
+    <ul>
+      <li><a href="#home" tabindex="0">Home</a></li>
+      <li><a href="Gallery.html" tabindex="0">Gallery</a></li>
+      <li><a href="About Me.html" tabindex="0">About Me</a></li>
+      <li><a href="My Work.html" tabindex="0">My Work</a></li>
+    </ul>
+  </nav>
+
   <footer>
-    &copy; 2025 Vicky. Made with passion for math & code.
+    &copy; 2025 Vicky. Made with passion for math &amp; code.
   </footer>
 
+  <!-- Floating math symbols container -->
+  <div id="symbolsContainer"></div>
+
   <script>
-    // Floating Math Symbols Animation
+    // Floating math symbols animation
     const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
     const container = document.getElementById('symbolsContainer');
-    
+
     function createSymbol() {
       const symbol = document.createElement('div');
       symbol.className = 'symbol';
@@ -205,31 +461,57 @@
       symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
       symbol.style.color = `hsl(${Math.random() * 60 + 200}, 30%, 50%)`;
       container.appendChild(symbol);
-      
+
+      // Remove symbol after animation duration
       setTimeout(() => {
         symbol.remove();
-      }, 8000);
+      }, parseFloat(symbol.style.animationDuration) * 1000);
     }
-    
-    // Create initial symbols
+
+    // Create initial symbols staggered
     for (let i = 0; i < 15; i++) {
       setTimeout(createSymbol, i * 500);
     }
-    
+
     // Continuous symbol creation
     setInterval(createSymbol, 1500);
 
-    // Math fact hover animation
-    const mathFact = document.querySelector('.math-fact');
-    mathFact.addEventListener('mouseenter', () => {
-      mathFact.style.transform = 'translateY(-5px)';
-      mathFact.style.boxShadow = '0 8px 20px rgba(58, 61, 92, 0.15)';
+    // Smooth scroll fallback for "Home" link
+    document.querySelector('a[href="#home"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
     });
-    
-    mathFact.addEventListener('mouseleave', () => {
-      mathFact.style.transform = '';
-      mathFact.style.boxShadow = '';
-    });
+
+    // Typing effect for subtitle
+    const typingElement = document.getElementById('typing');
+    const text = "Mathematics Student & Aspiring Web Developer";
+    let index = 0;
+    let isDeleting = false;
+    const speed = 100; // typing speed in ms
+    const pause = 1500; // pause before deleting or typing again
+
+    function type() {
+      if (!isDeleting) {
+        typingElement.textContent = text.substring(0, index + 1);
+        index++;
+        if (index === text.length) {
+          isDeleting = true;
+          setTimeout(type, pause);
+          return;
+        }
+      } else {
+        typingElement.textContent = text.substring(0, index - 1);
+        index--;
+        if (index === 0) {
+          isDeleting = false;
+          setTimeout(type, speed);
+          return;
+        }
+      }
+      setTimeout(type, isDeleting ? speed / 2 : speed);
+    }
+
+    type();
   </script>
 </body>
 </html>
