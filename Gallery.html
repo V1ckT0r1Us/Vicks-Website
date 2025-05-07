@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vicky's Gallery</title>
+  <title>Vicky the Mathematician & Web Developer</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -14,6 +14,7 @@
       --light-bg: #ecf0f1;
       --glow: 0 0 15px rgba(155, 89, 182, 0.7);
     }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -21,12 +22,11 @@
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
       color: white;
-      min-height: 100vh;
       overflow-x: hidden;
+      min-height: 100vh;
       position: relative;
-      display: flex;
-      flex-direction: column;
     }
+
     @keyframes float {
       0% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
@@ -37,8 +37,12 @@
       50%      { transform: scale(1.15); }
     }
     @keyframes glowPulse {
-      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
-      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+      0%, 100% {
+        text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);
+      }
+      50% {
+        text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);
+      }
     }
     @keyframes floatUp {
       0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
@@ -50,6 +54,7 @@
       0%, 50% { border-color: #9b59b6; }
       51%, 100% { border-color: transparent; }
     }
+
     header.hero {
       min-height: 280px;
       display: flex;
@@ -93,7 +98,6 @@
       user-select: none;
       font-weight: 500;
       letter-spacing: 0.05em;
-      white-space: normal;
       border-right: 2px solid #9b59b6;
       padding-right: 5px;
       overflow: hidden;
@@ -243,6 +247,7 @@
       transition: background 0.3s;
       user-select: none;
       cursor: pointer;
+      white-space: nowrap; /* Prevent wrapping */
     }
     nav.navbar ul li a:hover,
     nav.navbar ul li a.active,
@@ -275,18 +280,18 @@
       .shape2 { width: 50px; height: 50px; }
       .shape3 { width: 80px; height: 80px; }
       nav.navbar ul { gap: 1rem; }
-      nav.navbar ul li a { font-size: 1rem; }
+      nav.navbar ul li a { font-size: 1rem; padding: 0.25rem 0.3rem; }
     }
     @media (max-width: 500px) {
       .gallery-grid { grid-template-columns: 1fr; }
       .gallery-item img { height: 100px; }
+      nav.navbar ul { gap: 0.5rem; }
+      nav.navbar ul li a { font-size: 0.9rem; padding: 0.25rem 0.2rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Floating math symbols -->
   <div id="symbolsContainer"></div>
-
   <header class="hero" id="home" role="banner">
     <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo" class="profile-pic" />
     <h1>Vicky</h1>
@@ -297,7 +302,6 @@
       <img src="calculator.svg" alt="" class="shape shape3" />
     </div>
   </header>
-
   <main>
     <h2>My Gallery</h2>
     <div class="gallery-grid">
@@ -319,7 +323,6 @@
       </div>
     </div>
   </main>
-
   <nav class="navbar" role="navigation" aria-label="Primary Navigation">
     <ul>
       <li><a href="Home.html">Home</a></li>
@@ -328,11 +331,9 @@
       <li><a href="My Work.html">My Work</a></li>
     </ul>
   </nav>
-
   <footer>
     &copy; 2025 Vicky. Made with passion for math &amp; code.
   </footer>
-
   <script>
     // Floating math symbols animation
     const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
@@ -373,7 +374,7 @@
         index--;
         if (index === 0) {
           isDeleting = false;
-          setTimeout(type, pause); // pause when nothing is shown
+          setTimeout(type, pause);
           return;
         }
       }
