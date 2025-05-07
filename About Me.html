@@ -47,6 +47,41 @@
         text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);
       }
     }
+    /* Floating math symbols animation */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.2;
+      }
+      90% {
+        opacity: 0.2;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .floating-symbols {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .symbol {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0;
+      animation: floatUp 8s linear infinite;
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+    }
     /* Header / Hero */
     header.hero {
       min-height: 60vh;
@@ -93,23 +128,19 @@
       font-weight: 500;
       letter-spacing: 0.05em;
       white-space: normal;
+      border-right: 2px solid #9b59b6;
+      padding-right: 5px;
+      overflow: hidden;
       width: fit-content;
       max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      animation: blinkCursor 1s steps(2, start) infinite;
+      min-height: 2.2em;
     }
-    .aspiring-animated {
-      background: linear-gradient(90deg, #9b59b6, #3498db, #9b59b6, #3498db);
-      background-size: 200% auto;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      animation: gradient-move 2s linear infinite alternate;
-      font-weight: bold;
-      padding: 0 0.2em;
-      letter-spacing: 0.04em;
-    }
-    @keyframes gradient-move {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
+    @keyframes blinkCursor {
+      0%, 50% { border-color: #9b59b6; }
+      51%, 100% { border-color: transparent; }
     }
     /* Floating shapes */
     .floating-shapes {
@@ -336,7 +367,7 @@
       justify-content: center;
       align-items: center;
       padding: 0.75rem 1rem;
-      z-index: 10;
+      z-index: 100;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
       height: 56px;
       line-height: 56px;
@@ -377,19 +408,17 @@
   </style>
 </head>
 <body>
+  <div class="floating-symbols" id="symbolsContainer"></div>
   <header class="hero">
     <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo" class="profile-pic">
     <h1>Vicky</h1>
-    <p class="subtitle">
-      Mathematics Student & <span class="aspiring-animated">Aspiring</span> Web Developer
-    </p>
+    <p class="subtitle" id="subtitle"></p>
     <div class="floating-shapes">
       <img src="atom.svg" alt="atom" class="shape shape1">
       <img src="function.svg" alt="function" class="shape shape2">
       <img src="calculator.svg" alt="calculator" class="shape shape3">
     </div>
   </header>
-
   <main>
     <h2>About Me</h2>
     <section class="about-section">
@@ -470,14 +499,13 @@
       <a href="https://wa.me/263773230077">Get in Touch</a>
     </section>
   </main>
-
   <footer>
     <p>&copy; 2025 Vicky's Animated Math Universe | Where Equations Come Alive</p>
     <svg class="animated-path" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-      <path class="path" fill="none" stroke="rgba(155,89,182,0.2)" stroke-width="50" d="M0,320L48,298.7C96,277,192,235,288,213.3C384,192,480,192,576,202.7C672,213,768,235,864,234.7C960,235,1056,213,1152,202.7C1248,192,1344,192,1392,192L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+      <path class="path" fill="none" stroke="rgba(155,89,182,0.2)" stroke-width="50"
+        d="M0,320L48,298.7C96,277,192,235,288,213.3C384,192,480,192,576,202.7C672,213,768,235,864,234.7C960,235,1056,213,1152,202.7C1248,192,1344,192,1392,192L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
     </svg>
   </footer>
-  <!-- Fixed bottom nav bar -->
   <nav class="navbar">
     <ul>
       <li><a href="Home.html">Home</a></li>
@@ -486,5 +514,42 @@
       <li><a href="My Work.html">My Work</a></li>
     </ul>
   </nav>
+  <script>
+    // Floating Math Symbols
+    const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
+    const container = document.getElementById('symbolsContainer');
+    function createSymbol() {
+      const symbol = document.createElement('div');
+      symbol.className = 'symbol';
+      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      symbol.style.left = Math.random() * 100 + 'vw';
+      symbol.style.animationDuration = 5 + Math.random() * 5 + 's';
+      symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
+      symbol.style.color = `hsl(${Math.random() * 60 + 200}, 30%, 50%)`;
+      container.appendChild(symbol);
+      setTimeout(() => symbol.remove(), 8000);
+    }
+    for (let i = 0; i < 8; i++) setTimeout(createSymbol, i * 800);
+    setInterval(createSymbol, 1500);
+
+    // Animated subtitle (typewriter effect)
+    const subtitleText = "Mathematics Student & Aspiring Web Developer";
+    const subtitleElem = document.getElementById("subtitle");
+    let subIndex = 0, subDir = 1;
+    function typeSubtitle() {
+      subtitleElem.textContent = subtitleText.slice(0, subIndex);
+      if (subDir === 1 && subIndex < subtitleText.length) {
+        subIndex++;
+      } else if (subDir === 1 && subIndex === subtitleText.length) {
+        setTimeout(() => subDir = -1, 1200);
+      } else if (subDir === -1 && subIndex > 0) {
+        subIndex--;
+      } else if (subDir === -1 && subIndex === 0) {
+        setTimeout(() => subDir = 1, 700);
+      }
+      setTimeout(typeSubtitle, subDir === 1 ? 60 : 30);
+    }
+    typeSubtitle();
+  </script>
 </body>
 </html>
