@@ -15,13 +15,8 @@
       --glow: 0 0 15px rgba(155, 89, 182, 0.7);
     }
 
-    /* Reset & base */
-    * {
-      box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -32,45 +27,18 @@
       position: relative;
     }
 
-    /* Floating animation */
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0); }
-    }
-
-    /* Pulse (scale) animation */
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.15); }
-    }
-
-    /* Glow text animation */
+    /* Animations (unchanged) */
+    @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
     @keyframes glowPulse {
-      0%, 100% {
-        text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);
-      }
-      50% {
-        text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);
-      }
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
     }
-
-    /* Floating math symbols animation */
     @keyframes floatUp {
-      0% {
-        transform: translateY(100vh) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.2;
-      }
-      90% {
-        opacity: 0.2;
-      }
-      100% {
-        transform: translateY(-100px) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.2;}
+      90% { opacity: 0.2;}
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0;}
     }
 
     /* Header / Hero */
@@ -82,13 +50,11 @@
       align-items: center;
       position: relative;
       text-align: center;
-      padding: 0 1rem 4rem 1rem; /* extra bottom padding for nav */
+      padding: 0 1rem 4rem 1rem;
       background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
       overflow: hidden;
       z-index: 1;
     }
-
-    /* Profile picture styles with pulse and float */
     .profile-pic {
       width: 120px;
       height: 120px;
@@ -101,7 +67,6 @@
       user-select: none;
       will-change: transform;
     }
-
     header.hero h1 {
       font-size: 4rem;
       background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
@@ -113,7 +78,6 @@
       user-select: none;
       font-weight: 700;
     }
-
     header.hero .subtitle {
       font-size: 1.5rem;
       color: #ccc;
@@ -121,16 +85,14 @@
       user-select: none;
       font-weight: 500;
       letter-spacing: 0.05em;
-      white-space: normal; /* Allow wrapping on small screens */
-      border-right: 2px solid #9b59b6; /* cursor */
+      white-space: normal;
+      border-right: 2px solid #9b59b6;
       padding-right: 5px;
       overflow: hidden;
       width: fit-content;
       max-width: 100%;
       animation: blinkCursor 1s steps(2, start) infinite;
     }
-
-    /* Blinking cursor */
     @keyframes blinkCursor {
       0%, 50% { border-color: #9b59b6; }
       51%, 100% { border-color: transparent; }
@@ -153,7 +115,6 @@
       height: 56px;
       line-height: 56px;
     }
-
     nav.navbar ul {
       list-style: none;
       display: flex;
@@ -161,7 +122,6 @@
       margin: 0;
       padding: 0;
     }
-
     nav.navbar ul li a {
       color: white;
       text-decoration: none;
@@ -172,8 +132,8 @@
       transition: background 0.3s;
       user-select: none;
       cursor: pointer;
+      white-space: nowrap; /* Prevents link text from wrapping */
     }
-
     nav.navbar ul li a:hover,
     nav.navbar ul li a:focus {
       background: var(--neon-accent);
@@ -190,7 +150,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .shape {
       position: absolute;
       opacity: 0.3;
@@ -198,27 +157,9 @@
       user-select: none;
       filter: drop-shadow(0 0 2px rgba(155, 89, 182, 0.7));
     }
-    .shape1 {
-      top: 20%;
-      left: 5%;
-      width: 100px;
-      height: 100px;
-      animation-duration: 7s;
-    }
-    .shape2 {
-      top: 50%;
-      right: 10%;
-      width: 80px;
-      height: 80px;
-      animation-duration: 9s;
-    }
-    .shape3 {
-      bottom: 10%;
-      left: 20%;
-      width: 120px;
-      height: 120px;
-      animation-duration: 11s;
-    }
+    .shape1 { top: 20%; left: 5%; width: 100px; height: 100px; animation-duration: 7s; }
+    .shape2 { top: 50%; right: 10%; width: 80px; height: 80px; animation-duration: 9s; }
+    .shape3 { bottom: 10%; left: 20%; width: 120px; height: 120px; animation-duration: 11s; }
 
     /* Floating math symbols container */
     #symbolsContainer {
@@ -231,7 +172,6 @@
       overflow: hidden;
       z-index: 0;
     }
-
     .symbol {
       position: absolute;
       font-size: 24px;
@@ -247,7 +187,7 @@
     /* Main content */
     main {
       max-width: 900px;
-      margin: 2rem auto 6rem auto; /* bottom margin to avoid nav overlap */
+      margin: 2rem auto 6rem auto;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       backdrop-filter: blur(10px);
@@ -257,7 +197,6 @@
       position: relative;
       z-index: 2;
     }
-
     main h2 {
       font-size: 2.5rem;
       margin-top: 0;
@@ -268,7 +207,6 @@
       color: transparent;
       user-select: none;
     }
-
     main p {
       font-size: 1.2rem;
       line-height: 1.6;
@@ -313,7 +251,6 @@
       100% { transform: translateX(100%); }
     }
 
-    /* Euler equation style */
     .euler {
       font-weight: 700;
       font-size: 1.4rem;
@@ -338,65 +275,36 @@
       font-size: 1rem;
       user-select: none;
       position: relative;
-      margin-bottom: 56px; /* Push footer above nav bar */
+      margin-bottom: 56px;
       z-index: 2;
     }
 
-    /* Responsive */
+    /* Responsive styles */
     @media (max-width: 768px) {
-      header.hero h1 {
-        font-size: 2.5rem;
-      }
-      header.hero .subtitle {
-        font-size: 1.2rem;
-      }
-      .profile-pic {
-        width: 90px;
-        height: 90px;
-        margin-bottom: 0.75rem;
-      }
-      main {
-        margin: 1rem 1rem 6rem 1rem;
-        padding: 1.5rem 1rem;
-      }
-      main h2 {
-        font-size: 1.8rem;
-      }
-      .shape1 {
-        width: 60px;
-        height: 60px;
-      }
-      .shape2 {
-        width: 50px;
-        height: 50px;
-      }
-      .shape3 {
-        width: 80px;
-        height: 80px;
-      }
-      nav.navbar ul {
-        gap: 1rem;
-      }
-      nav.navbar ul li a {
-        font-size: 1rem;
-      }
+      header.hero h1 { font-size: 2.5rem; }
+      header.hero .subtitle { font-size: 1.2rem; }
+      .profile-pic { width: 90px; height: 90px; margin-bottom: 0.75rem; }
+      main { margin: 1rem 1rem 6rem 1rem; padding: 1.5rem 1rem; }
+      main h2 { font-size: 1.8rem; }
+      .shape1 { width: 60px; height: 60px; }
+      .shape2 { width: 50px; height: 50px; }
+      .shape3 { width: 80px; height: 80px; }
+      nav.navbar ul { gap: 1rem; }
+      nav.navbar ul li a { font-size: 1rem; }
     }
-
-    /* Small mobile */
     @media (max-width: 500px) {
-      header.hero .subtitle {
-        font-size: 1rem;
-        padding-right: 3px;
+      header.hero .subtitle { font-size: 1rem; padding-right: 3px; }
+      nav.navbar ul { gap: 0.5rem; }
+      nav.navbar ul li a {
+        font-size: 0.85rem;
+        padding: 0.15rem 0.3rem;
       }
     }
-
     @media (max-width: 400px) {
-      nav.navbar ul {
-        gap: 0.5rem;
-      }
+      nav.navbar ul { gap: 0.3rem; }
       nav.navbar ul li a {
-        font-size: 0.9rem;
-        padding: 0.25rem 0.4rem;
+        font-size: 0.8rem;
+        padding: 0.15rem 0.25rem;
       }
     }
   </style>
@@ -406,7 +314,6 @@
     <img src="Vicky.JPEG.jpeg" alt="Vicky's Profile Photo" class="profile-pic" />
     <h1>Vicky</h1>
     <p class="subtitle"><span id="typing"></span></p>
-
     <div class="floating-shapes" aria-hidden="true">
       <img src="atom.svg" alt="" class="shape shape1" />
       <img src="function.svg" alt="" class="shape shape2" />
@@ -419,7 +326,6 @@
     <p>
       Hi, I'm Vicky. I love exploring the beauty of mathematics and bringing ideas to life through web development. Whether it's solving equations or building interactive websites, I'm always up for a challenge!
     </p>
-
     <div class="math-fact" tabindex="0" aria-label="Math fact about Euler's identity">
       <strong>Did you know?</strong><br />
       The identity <span class="euler">e<sup>iπ</sup> + 1 = 0</span> is considered the most beautiful equation in mathematics. It connects:
@@ -432,7 +338,6 @@
       </ul>
       This single equation elegantly unites five fundamental mathematical constants!
     </div>
-
     <p>
       Check back soon for more of my projects, mathematical musings, and web experiments!
     </p>
@@ -451,14 +356,11 @@
     &copy; 2025 Vicky. Made with passion for math &amp; code.
   </footer>
 
-  <!-- Floating math symbols container -->
   <div id="symbolsContainer"></div>
-
   <script>
     // Floating math symbols animation
     const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
     const container = document.getElementById('symbolsContainer');
-
     function createSymbol() {
       const symbol = document.createElement('div');
       symbol.className = 'symbol';
@@ -468,19 +370,13 @@
       symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
       symbol.style.color = `hsl(${Math.random() * 60 + 200}, 30%, 50%)`;
       container.appendChild(symbol);
-
-      // Remove symbol after animation duration
       setTimeout(() => {
         symbol.remove();
       }, parseFloat(symbol.style.animationDuration) * 1000);
     }
-
-    // Create initial symbols staggered
     for (let i = 0; i < 15; i++) {
       setTimeout(createSymbol, i * 500);
     }
-
-    // Continuous symbol creation
     setInterval(createSymbol, 1500);
 
     // Smooth scroll fallback for "Home" link
@@ -496,7 +392,6 @@
     let isDeleting = false;
     const speed = 100; // typing speed in ms
     const pause = 1500; // pause before deleting or typing again
-
     function type() {
       if (!isDeleting) {
         typingElement.textContent = text.substring(0, index + 1);
@@ -517,7 +412,6 @@
       }
       setTimeout(type, isDeleting ? speed / 2 : speed);
     }
-
     type();
   </script>
 </body>
