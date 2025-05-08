@@ -389,6 +389,7 @@
       transition: background 0.3s;
       user-select: none;
       cursor: pointer;
+      white-space: nowrap; /* THIS LINE FIXES THE NAV WRAP */
     }
     nav.navbar ul li a:hover,
     nav.navbar ul li a.active {
@@ -523,33 +524,91 @@
       symbol.className = 'symbol';
       symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
       symbol.style.left = Math.random() * 100 + 'vw';
-      symbol.style.animationDuration = 5 + Math.random() * 5 + 's';
-      symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
-      symbol.style.color = `hsl(${Math.random() * 60 + 200}, 30%, 50%)`;
+      symbol.style.fontSize = (18 + Math.random() * 22) + 'px';
+      symbol.style.animationDuration = (6 + Math.random() * 4) + 's';
+      symbol.style.top = '100vh';
       container.appendChild(symbol);
-      setTimeout(() => symbol.remove(), 8000);
+      setTimeout(() => container.removeChild(symbol), 8000);
     }
-    for (let i = 0; i < 8; i++) setTimeout(createSymbol, i * 800);
-    setInterval(createSymbol, 1500);
-
-    // Animated subtitle (typewriter effect)
-    const subtitleText = "Mathematics Student & Aspiring Web Developer";
-    const subtitleElem = document.getElementById("subtitle");
-    let subIndex = 0, subDir = 1;
+    setInterval(createSymbol, 700);
+    // Subtitle typing animation
+    const subtitle = document.getElementById('subtitle');
+    const phrases = [
+      "Maths Enthusiast | Web Developer | Problem Solver",
+      "Exploring the Universe, One Equation at a Time",
+      "Turning Numbers into Stories and Code into Art"
+    ];
+    let phraseIndex = 0, charIndex = 0, typing = true;
     function typeSubtitle() {
-      subtitleElem.textContent = subtitleText.slice(0, subIndex);
-      if (subDir === 1 && subIndex < subtitleText.length) {
-        subIndex++;
-      } else if (subDir === 1 && subIndex === subtitleText.length) {
-        setTimeout(() => subDir = -1, 1200);
-      } else if (subDir === -1 && subIndex > 0) {
-        subIndex--;
-      } else if (subDir === -1 && subIndex === 0) {
-        setTimeout(() => subDir = 1, 700);
+      if (typing) {
+        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex++);
+        if (charIndex > phrases[phraseIndex].length) {
+          typing = false;
+          setTimeout(typeSubtitle, 1200);
+        } else {
+          setTimeout(typeSubtitle, 60);
+        }
+      } else {
+        charIndex--;
+        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex);
+        if (charIndex === 0) {
+          typing = true;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(typeSubtitle, 400);
+        } else {
+          setTimeout(typeSubtitle, 25);
+        }
       }
-      setTimeout(typeSubtitle, subDir === 1 ? 60 : 30);
     }
     typeSubtitle();
   </script>
+  <script>
+    // Floating Math Symbols
+    const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
+    const container = document.getElementById('symbolsContainer');
+    function createSymbol() {
+      const symbol = document.createElement('div');
+      symbol.className = 'symbol';
+      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      symbol.style.left = Math.random() * 100 + 'vw';
+      symbol.style.fontSize = (18 + Math.random() * 22) + 'px';
+      symbol.style.animationDuration = (6 + Math.random() * 4) + 's';
+      symbol.style.top = '100vh';
+      container.appendChild(symbol);
+      setTimeout(() => container.removeChild(symbol), 8000);
+    }
+    setInterval(createSymbol, 700);
+  
+    // Subtitle typing animation
+    const subtitle = document.getElementById('subtitle');
+    const phrases = [
+      "Maths Enthusiast | Web Developer | Problem Solver",
+      "Exploring the Universe, One Equation at a Time",
+      "Turning Numbers into Stories and Code into Art"
+    ];
+    let phraseIndex = 0, charIndex = 0, typing = true;
+    function typeSubtitle() {
+      if (typing) {
+        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex++);
+        if (charIndex > phrases[phraseIndex].length) {
+          typing = false;
+          setTimeout(typeSubtitle, 1200);
+        } else {
+          setTimeout(typeSubtitle, 60);
+        }
+      } else {
+        charIndex--;
+        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex);
+        if (charIndex === 0) {
+          typing = true;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(typeSubtitle, 400);
+        } else {
+          setTimeout(typeSubtitle, 25);
+        }
+      }
+    }
+    typeSubtitle();
+  </script>  
 </body>
 </html>
