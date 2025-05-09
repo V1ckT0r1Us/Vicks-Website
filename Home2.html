@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vicky the Mathematician & Web Developer</title>
   <style>
     body {
@@ -59,11 +59,11 @@
       animation: slideUp 1s 1s forwards;
       opacity: 0;
       transform: translateY(30px);
-      text-align: center; /* Added centering */
+      text-align: center;
     }
     main h2 {
       margin: 0 auto 1em auto;
-      color: #3a3d5c; /* Changed from black to match theme */
+      color: #3a3d5c;
       font-size: 1.8em;
       max-width: 90%;
     }
@@ -79,7 +79,7 @@
       color: #2a2d4c;
       position: relative;
       overflow: hidden;
-      text-align: left; /* Reset to left for content */
+      text-align: left;
     }
     .math-fact::before {
       content: '';
@@ -137,11 +137,27 @@
       90% { opacity: 0.2; }
       100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
     }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 1em 0 0 0;
+      display: flex;
+      justify-content: center;
+      gap: 2em;
+      flex-wrap: nowrap; /* prevent wrapping */
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      white-space: nowrap; /* prevent link text wrapping */
+    }
     @media (max-width: 600px) {
       main { padding: 1em; }
       header { padding: 1em 0.5em; }
-      main h2 {
-        font-size: 1.5em;
+      main h2 { font-size: 1.5em; }
+      nav ul {
+        gap: 1em; /* reduce gap on mobile */
       }
     }
   </style>
@@ -154,11 +170,11 @@
     <h1><a href="Vicky.html" style="color: #fff; text-decoration: none; font-weight: 500;">Vicky</a></h1>
     <p>Mathematics Student & Aspiring Web Developer</p>
     <nav>
-      <ul style="list-style: none; padding: 0; margin: 1em 0 0 0; display: flex; justify-content: center; gap: 2em;">
-        <li><a href="Home2.html" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a></li>
-        <li><a href="Gallery2.html" style="color: #fff; text-decoration: none; font-weight: 500;">Gallery</a></li>
-        <li><a href="About Me2.html" style="color: #fff; text-decoration: none; font-weight: 500;">About Me</a></li>
-        <li><a href="My Work2.html" style="color: #fff; text-decoration: none; font-weight: 500;">My Work</a></li>
+      <ul>
+        <li><a href="Home2.html">Home</a></li>
+        <li><a href="Gallery2.html">Gallery</a></li>
+        <li><a href="About Me2.html">About Me</a></li>
+        <li><a href="My Work2.html">My Work</a></li>
       </ul>
     </nav>
   </header>
