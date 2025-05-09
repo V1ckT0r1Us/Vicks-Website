@@ -532,34 +532,41 @@
       <li><a href="My Work.html">My Work</a></li>
     </ul>
   </nav>
-  <script>
-    // Floating Math Symbols
-    const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
-    const container = document.getElementById('symbolsContainer');
-    function createSymbol() {
-      const symbol = document.createElement('span');
-      symbol.className = 'symbol';
-      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-      symbol.style.left = Math.random() * 100 + 'vw';
-      symbol.style.fontSize = (18 + Math.random() * 22) + 'px';
-      symbol.style.animationDuration = (6 + Math.random() * 4) + 's';
-      symbol.style.opacity = 0.15 + Math.random() * 0.35;
-      container.appendChild(symbol);
-      setTimeout(() => container.removeChild(symbol), 8000);
-    }
-    setInterval(createSymbol, 800);
 
-    // Subtitle typing effect
-    const subtitleText = "Maths Enthusiast | Web Dev Explorer | Problem Solver";
-    let i = 0;
-    function typeSubtitle() {
-      if (i <= subtitleText.length) {
-        document.getElementById('subtitle').textContent = subtitleText.slice(0, i);
-        i++;
-        setTimeout(typeSubtitle, 80);
+  <!-- Typing Effect Script -->
+  <script>
+    const subtitle = document.getElementById('subtitle');
+    const texts = [
+      "Mathematics Student & Aspiring Web Developer"
+    ];
+    let textIndex = 0;
+    let charIndex = 0;
+    let typing = true;
+
+    function typeEffect() {
+      const currentText = texts[textIndex];
+      if (typing) {
+        subtitle.textContent = currentText.slice(0, charIndex + 1);
+        charIndex++;
+        if (charIndex === currentText.length) {
+          typing = false;
+          setTimeout(typeEffect, 1200); // Pause after full text
+        } else {
+          setTimeout(typeEffect, 60);
+        }
+      } else {
+        subtitle.textContent = currentText.slice(0, charIndex - 1);
+        charIndex--;
+        if (charIndex === 0) {
+          typing = true;
+          setTimeout(typeEffect, 600); // Pause before typing again
+        } else {
+          setTimeout(typeEffect, 30);
+        }
       }
     }
-    typeSubtitle();
+
+    typeEffect();
   </script>
 </body>
 </html>
