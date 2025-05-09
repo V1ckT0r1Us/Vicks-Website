@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vicky's Gallery</title>
   <style>
     /* Base Styles */
@@ -127,6 +127,24 @@
       font-weight: 500;
     }
     
+    /* Navigation Styles */
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 1em 0 0 0;
+      display: flex;
+      justify-content: center;
+      gap: 2em;
+      flex-wrap: nowrap; /* Prevent wrapping */
+    }
+    
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      white-space: nowrap; /* Prevent link text from wrapping */
+    }
+    
     /* Floating Symbols */
     .floating-symbols {
       position: fixed;
@@ -172,6 +190,9 @@
       h1 {
         font-size: 1.8em;
       }
+      nav ul {
+        gap: 1em; /* Reduce gap on mobile for better fit */
+      }
     }
   </style>
 </head>
@@ -183,11 +204,11 @@
     <h1><a href="Vicky.html" style="color: #fff; text-decoration: none; font-weight: 500;">Vicky</a></h1>
     <p>Mathematics Student & Aspiring Web Developer</p>
     <nav>
-      <ul style="list-style: none; padding: 0; margin: 1em 0 0 0; display: flex; justify-content: center; gap: 2em;">
-        <li><a href="Home2.html" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a></li>
-        <li><a href="Gallery2.html" style="color: #fff; text-decoration: none; font-weight: 500;">Gallery</a></li>
-        <li><a href="About Me2.html" style="color: #fff; text-decoration: none; font-weight: 500;">About Me</a></li>
-        <li><a href="My Work2.html" style="color: #fff; text-decoration: none; font-weight: 500;">My Work</a></li>
+      <ul>
+        <li><a href="Home2.html">Home</a></li>
+        <li><a href="Gallery2.html">Gallery</a></li>
+        <li><a href="About Me2.html">About Me</a></li>
+        <li><a href="My Work2.html">My Work</a></li>
       </ul>
     </nav>
   </header>
@@ -196,22 +217,22 @@
     <h2>My Gallery</h2>
     <div class="gallery-grid">
       <div class="gallery-item">
-        <img src="depositphotos_310299274-stock-photo-blonde-5-year-old-kid.jpg" alt="Mathematical Visualization">
+        <img src="depositphotos_310299274-stock-photo-blonde-5-year-old-kid.jpg" alt="Mathematical Visualization" />
         <div class="caption">Fractal Patterns Exploration</div>
       </div>
       
       <div class="gallery-item">
-        <img src="istockphoto-105837480-612x612.jpg" alt="Web Development Project">
+        <img src="istockphoto-105837480-612x612.jpg" alt="Web Development Project" />
         <div class="caption">Interactive Web Interface</div>
       </div>
       
       <div class="gallery-item">
-        <img src="math-equations-wallpaper-preview.jpg" alt="Geometry Study">
+        <img src="math-equations-wallpaper-preview.jpg" alt="Geometry Study" />
         <div class="caption">3D Geometric Modeling</div>
       </div>
       
       <div class="gallery-item">
-        <img src="close-male-hands-using-laptop-260nw-2195689529.jpg" alt="Code Example">
+        <img src="close-male-hands-using-laptop-260nw-2195689529.jpg" alt="Code Example" />
         <div class="caption">Algorithm Implementation</div>
       </div>
     </div>
