@@ -378,6 +378,11 @@
       gap: 2rem;
       margin: 0;
       padding: 0;
+      /* For mobile fix: allow horizontal scroll if needed */
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+      justify-content: center;
     }
     nav.navbar ul li a {
       color: white;
@@ -389,7 +394,8 @@
       transition: background 0.3s;
       user-select: none;
       cursor: pointer;
-      white-space: nowrap; /* THIS LINE FIXES THE NAV WRAP */
+      white-space: nowrap;
+      /* Prevents wrapping */
     }
     nav.navbar ul li a:hover,
     nav.navbar ul li a.active {
@@ -405,6 +411,17 @@
       .shape { width: 50px !important; height: 50px !important; }
       .shape2 { width: 40px; }
       .shape3 { width: 60px; }
+      nav.navbar ul li a {
+        font-size: 0.95rem;
+        padding: 0.2rem 0.3rem;
+      }
+    }
+    @media (max-width: 480px) {
+      nav.navbar ul { gap: 0.4em; }
+      nav.navbar ul li a {
+        font-size: 0.85rem;
+        padding: 0.15rem 0.2rem;
+      }
     }
   </style>
 </head>
@@ -520,97 +537,29 @@
     const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
     const container = document.getElementById('symbolsContainer');
     function createSymbol() {
-      const symbol = document.createElement('div');
+      const symbol = document.createElement('span');
       symbol.className = 'symbol';
       symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
       symbol.style.left = Math.random() * 100 + 'vw';
       symbol.style.fontSize = (18 + Math.random() * 22) + 'px';
       symbol.style.animationDuration = (6 + Math.random() * 4) + 's';
-      symbol.style.top = '100vh';
+      symbol.style.opacity = 0.15 + Math.random() * 0.35;
       container.appendChild(symbol);
       setTimeout(() => container.removeChild(symbol), 8000);
     }
-    setInterval(createSymbol, 700);
-    // Subtitle typing animation
-    const subtitle = document.getElementById('subtitle');
-    const phrases = [
-      "Mathematics Student & Aspiring Web Developer",
-      "Maths Enthusiast | Web Developer | Problem Solver",
-      "Exploring the Universe, One Equation at a Time",
-      "Turning Numbers into Stories and Code into Art"
-    ];
-    let phraseIndex = 0, charIndex = 0, typing = true;
+    setInterval(createSymbol, 800);
+
+    // Subtitle typing effect
+    const subtitleText = "Maths Enthusiast | Web Dev Explorer | Problem Solver";
+    let i = 0;
     function typeSubtitle() {
-      if (typing) {
-        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex++);
-        if (charIndex > phrases[phraseIndex].length) {
-          typing = false;
-          setTimeout(typeSubtitle, 1200);
-        } else {
-          setTimeout(typeSubtitle, 60);
-        }
-      } else {
-        charIndex--;
-        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex);
-        if (charIndex === 0) {
-          typing = true;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-          setTimeout(typeSubtitle, 400);
-        } else {
-          setTimeout(typeSubtitle, 25);
-        }
+      if (i <= subtitleText.length) {
+        document.getElementById('subtitle').textContent = subtitleText.slice(0, i);
+        i++;
+        setTimeout(typeSubtitle, 80);
       }
     }
     typeSubtitle();
   </script>
-  <script>
-    // Floating Math Symbols
-    const symbols = ['π', '∑', '∞', '√', '∫', 'Δ', 'λ', 'ϕ', 'θ', 'Ω', 'e', 'i'];
-    const container = document.getElementById('symbolsContainer');
-    function createSymbol() {
-      const symbol = document.createElement('div');
-      symbol.className = 'symbol';
-      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-      symbol.style.left = Math.random() * 100 + 'vw';
-      symbol.style.fontSize = (18 + Math.random() * 22) + 'px';
-      symbol.style.animationDuration = (6 + Math.random() * 4) + 's';
-      symbol.style.top = '100vh';
-      container.appendChild(symbol);
-      setTimeout(() => container.removeChild(symbol), 8000);
-    }
-    setInterval(createSymbol, 700);
-  
-    // Subtitle typing animation
-    const subtitle = document.getElementById('subtitle');
-    const phrases = [
-      "Mathematics Student & Aspiring Web Developer",
-      "Maths Enthusiast | Web Developer | Problem Solver",
-      "Exploring the Universe, One Equation at a Time",
-      "Turning Numbers into Stories and Code into Art"
-    ];
-    let phraseIndex = 0, charIndex = 0, typing = true;
-    function typeSubtitle() {
-      if (typing) {
-        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex++);
-        if (charIndex > phrases[phraseIndex].length) {
-          typing = false;
-          setTimeout(typeSubtitle, 1200);
-        } else {
-          setTimeout(typeSubtitle, 60);
-        }
-      } else {
-        charIndex--;
-        subtitle.textContent = phrases[phraseIndex].slice(0, charIndex);
-        if (charIndex === 0) {
-          typing = true;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-          setTimeout(typeSubtitle, 400);
-        } else {
-          setTimeout(typeSubtitle, 25);
-        }
-      }
-    }
-    typeSubtitle();
-  </script>  
 </body>
 </html>
