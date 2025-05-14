@@ -407,7 +407,7 @@
 
   <nav class="navbar" role="navigation" aria-label="Primary Navigation">
     <ul>
-      <li><a href="#home" tabindex="0">Home</a></li>
+      <li><a href="Home.html" tabindex="0">Home</a></li>
       <li><a href="Gallery.html" tabindex="0">Gallery</a></li>
       <li><a href="About Me.html" tabindex="0">About Me</a></li>
       <li><a href="My Work.html" tabindex="0">My Work</a></li>
@@ -475,9 +475,9 @@
     setInterval(createSymbol, 1500);
 
     // Smooth scroll fallback for "Home" link
-    document.querySelector('a[href="#home"]').addEventListener('click', function(e) {
+    document.querySelector('a[href="Home.html"]').addEventListener('click', function(e) {
       e.preventDefault();
-      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('Home').scrollIntoView({ behavior: 'smooth' });
     });
 
     // Typing effect for subtitle
