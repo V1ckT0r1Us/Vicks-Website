@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>9-Puzzle Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .puzzle-board {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      margin-bottom: 1.5rem;
+    }
+    .tile {
+      width: 80px;
+      height: 80px;
+      font-size: 2.2rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px var(--neon-accent);
+      cursor: pointer;
+      border: none;
+      outline: none;
+      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .tile.blank {
+      background: none;
+      box-shadow: none;
+      cursor: default;
+    }
+    .tile:active {
+      transform: scale(0.95);
+    }
+    .success {
+      color: #00ffae;
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-shadow: 0 0 8px var(--neon-accent);
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    .footer {
+      color: #bdbdbd;
+      font-size: 0.97rem;
+      margin-top: 2.5rem;
+      text-align: center;
+      opacity: 0.8;
+    }
+    @media (max-width: 500px) {
+      .puzzle-board {
+        grid-template-columns: repeat(3, 50px);
+        grid-template-rows: repeat(3, 50px);
+      }
+      .tile { width: 50px; height: 50px; font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Solve the 9-Puzzle!</h1>
+  <div class="puzzle-board" id="board"></div>
+  <div id="message"></div>
+  <div class="footer">&copy; 2025 Vicky. Can you solve it?</div>
+  <script>
+    // === CONFIGURE YOUR REDIRECT BELOW ===
+    const redirectUrl = "Home2.html"; // Change to your desired HTML file
+    // === END CONFIG ===
+
+    const size = 3;
+    const totalTiles = 9;
+    const board = document.getElementById('board');
+    let tiles = [];
+    let blankIndex = totalTiles; // 9 for 1-9 + blank
+
+    function shuffle(array) {
+      // Fisher-Yates shuffle (ensure solvable)
+      do {
+        for (let i = array.length - 2; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      } while (!isSolvable(array) || isSolved(array));
+    }
+
+    function isSolvable(arr) {
+      let inv = 0;
+      for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          if (arr[i] !== blankIndex && arr[j] !== blankIndex && arr[i] > arr[j]) inv++;
+        }
+      }
+      return inv % 2 === 0;
+    }
+
+    function isSolved(arr) {
+      for (let i = 0; i < arr.length - 1; i++) {
+        if (arr[i] !== i + 1) return false;
+      }
+      return arr[arr.length - 1] === blankIndex;
+    }
+
+    function createTiles() {
+      tiles = [];
+      for (let i = 1; i <= totalTiles; i++) tiles.push(i);
+      tiles.push(blankIndex);
+      shuffle(tiles);
+    }
+
+    function render() {
+      board.innerHTML = "";
+      tiles.forEach((tile, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'tile' + (tile === blankIndex ? ' blank' : '');
+        btn.textContent = tile === blankIndex ? "" : tile;
+        btn.addEventListener('click', () => moveTile(idx));
+        board.appendChild(btn);
+      });
+    }
+
+    function moveTile(idx) {
+      const blank = tiles.indexOf(blankIndex);
+      const validMoves = [
+        blank - 1, blank + 1, blank - size, blank + size
+      ];
+      // Must be adjacent and not wrap rows
+      if (validMoves.includes(idx) &&
+          (Math.abs(idx - blank) === 1 && Math.floor(idx / size) === Math.floor(blank / size) ||
+           Math.abs(idx - blank) === size)) {
+        [tiles[blank], tiles[idx]] = [tiles[idx], tiles[blank]];
+        render();
+        if (isSolved(tiles)) {
+          document.getElementById('message').innerHTML = '<div class="success">Congratulations! Puzzle solved 🎉<br>Redirecting...</div>';
+          setTimeout(() => { window.location.href = redirectUrl; }, 2000);
+        }
+      }
+    }
+
+    // Initialize
+    createTiles();
+    render();
+  </script>
+</body>
+</html>
