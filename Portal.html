@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome to Vicky's Puzzles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    .entry-container {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+      margin-top: 3rem;
+    }
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 1.1rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .choose-text {
+      font-size: 1.2rem;
+      margin-bottom: 2.2rem;
+      color: #f6e9ff;
+    }
+    .puzzle-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .puzzle-btn {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 1.1em 2.5em;
+      font-size: 1.25rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 15px var(--neon-accent), 0 2px 8px rgba(44,62,80,0.2);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+      outline: none;
+      margin-bottom: 0.3rem;
+    }
+    .puzzle-btn:hover, .puzzle-btn:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      color: var(--dark-bg);
+      transform: scale(1.07);
+      box-shadow: 0 0 25px var(--neon-accent), 0 4px 16px rgba(44,62,80,0.35);
+    }
+    .desc {
+      font-size: 0.98rem;
+      color: #e5d7f7;
+      margin-bottom: 0.3rem;
+      margin-top: -0.9rem;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+    }
+    .footer {
+      color: #bdbdbd;
+      font-size: 0.97rem;
+      margin-top: 2.5rem;
+      text-align: center;
+      opacity: 0.8;
+    }
+    @media (max-width: 500px) {
+      .entry-container {
+        padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+        max-width: 98vw;
+      }
+      h1 { font-size: 1.5rem; }
+      .puzzle-btn { font-size: 1.05rem; padding: 0.8em 1.2em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="entry-container">
+    <h1>Welcome to Vicky's Puzzle Portal!</h1>
+    <div class="choose-text">
+      Choose a puzzle to begin your journey:
+    </div>
+    <div class="puzzle-buttons">
+      <button class="puzzle-btn" onclick="window.location.href='puzzle1.html'">
+        🧩 Puzzle 1: Math Riddle
+      </button>
+      <div class="desc">Solve it to enter the main site!</div>
+      <button class="puzzle-btn" onclick="window.open('https://im-a-puzzle.com', '_blank')">
+        🧩 Puzzle 2: Surprise Jigsaw
+      </button>
+      <div class="desc">Enjoy a fun external puzzle!</div>
+    </div>
+    <div class="footer">
+      &copy; 2025 Vicky. Math &amp; Code Adventures Await!
+    </div>
+  </div>
+</body>
+</html>
