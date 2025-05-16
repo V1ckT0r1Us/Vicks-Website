@@ -101,9 +101,9 @@
 </head>
 <body>
   <div class="puzzle-container">
-    <h1>Solve the Puzzle!</h1>
+    <h1>Solve the Identity!</h1>
     <div class="riddle">
-      What is the value of <b>7 × 6</b>?<br>
+      What is the value of <b>e<sup>i&pi;</sup> + 1</b>?<br>
       (Type your answer as a number)
     </div>
     <input type="text" id="answer" placeholder="Your answer..." autocomplete="off" />
@@ -115,14 +115,15 @@
     function checkAnswer() {
       const input = document.getElementById('answer');
       const feedback = document.getElementById('feedback');
-      const correct = 42;
-      if (parseInt(input.value.trim(), 10) === correct) {
+      // Accept 0, "0", or "-0"
+      const value = input.value.trim();
+      if (value === "0" || value === "-0") {
         feedback.innerHTML = '<div class="success">Correct! Redirecting to home...</div>';
         setTimeout(() => {
           window.location.href = "Home2.html"; // Change this to your actual home page
         }, 1800);
       } else {
-        feedback.innerHTML = '<div class="error">Try again! Hint: It\'s the answer to life, the universe, and everything.</div>';
+        feedback.innerHTML = '<div class="error">Try again! Hint: This is Euler\'s identity.</div>';
       }
     }
     // Allow Enter key to submit
