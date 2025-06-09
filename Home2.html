@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vicky the Mathematician & Web Developer</title>
   <style>
+    /* Make body a flex container with vertical stacking */
     body {
       margin: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -13,6 +14,24 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Allow main to grow and push footer down */
+    main {
+      flex: 1 0 auto;
+      max-width: 700px;
+      margin: 2em auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(60,60,100,0.07);
+      padding: 2em;
+      position: relative;
+      z-index: 2;
+      animation: slideUp 1s 1s forwards;
+      opacity: 0;
+      transform: translateY(30px);
+      text-align: center;
     }
     header {
       background: #3a3d5c;
@@ -45,21 +64,6 @@
     }
     @keyframes fadeIn {
       to { opacity: 1; }
-    }
-    main {
-      flex: 1;
-      max-width: 700px;
-      margin: 2em auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(60,60,100,0.07);
-      padding: 2em;
-      position: relative;
-      z-index: 2;
-      animation: slideUp 1s 1s forwards;
-      opacity: 0;
-      transform: translateY(30px);
-      text-align: center;
     }
     main h2 {
       margin: 0 auto 1em auto;
@@ -109,12 +113,17 @@
     .euler:hover {
       transform: scale(1.05);
     }
+    /* Footer styled normally, pushed to bottom by flex */
     footer {
       background: #3a3d5c;
       color: #fff;
       text-align: center;
       padding: 1em 0;
       font-size: 1em;
+      flex-shrink: 0;
+      position: relative;
+      width: 100%;
+      z-index: 2;
     }
     .floating-symbols {
       position: fixed;
