@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Target Practice Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+      --target-size: 60px;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem;
+      user-select: none;
+    }
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .game-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      height: 400px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .target {
+      position: absolute;
+      width: var(--target-size);
+      height: var(--target-size);
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--neon-accent) 40%, var(--code-blue) 90%);
+      box-shadow: 0 0 15px var(--neon-accent);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+    .target:active {
+      transform: scale(0.8);
+      box-shadow: 0 0 25px #00ffae;
+    }
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      max-width: 480px;
+      width: 100%;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--neon-accent);
+      text-shadow: 0 0 6px var(--neon-accent);
+    }
+    button {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.8em 2em;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 15px var(--neon-accent);
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 25px var(--neon-accent);
+      color: var(--dark-bg);
+      outline: none;
+    }
+    .message {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #00ffae;
+      text-shadow: 0 0 10px var(--neon-accent);
+      margin-top: 1rem;
+      min-height: 1.5em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Target Practice</h1>
+  <div class="info-bar">
+    <div>Score: <span id="score">0</span></div>
+    <div>Time: <span id="time">30</span>s</div>
+  </div>
+  <div class="game-container" id="gameContainer" aria-label="Target practice game area" role="main"></div>
+  <button id="startBtn">Start Game</button>
+  <div class="message" id="message"></div>
+
+  <script>
+    const gameContainer = document.getElementById('gameContainer');
+    const scoreEl = document.getElementById('score');
+    const timeEl = document.getElementById('time');
+    const startBtn = document.getElementById('startBtn');
+    const messageEl = document.getElementById('message');
+
+    const targetSize = 60;
+    let score = 0;
+    let timeLeft = 30;
+    let gameInterval = null;
+    let countdownInterval = null;
+
+    function randomPosition() {
+      const rect = gameContainer.getBoundingClientRect();
+      const x = Math.random() * (rect.width - targetSize);
+      const y = Math.random() * (rect.height - targetSize);
+      return { x, y };
+    }
+
+    function createTarget() {
+      const target = document.createElement('div');
+      target.classList.add('target');
+      const { x, y } = randomPosition();
+      target.style.left = `${x}px`;
+      target.style.top = `${y}px`;
+      target.setAttribute('tabindex', '0');
+      target.setAttribute('role', 'button');
+      target.setAttribute('aria-label', 'Target');
+      target.addEventListener('click', () => {
+        score++;
+        scoreEl.textContent = score;
+        // Move target immediately
+        const pos = randomPosition();
+        target.style.left = `${pos.x}px`;
+        target.style.top = `${pos.y}px`;
+      });
+      target.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          target.click();
+        }
+      });
+      return target;
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreEl.textContent = score;
+      timeEl.textContent = timeLeft;
+      messageEl.textContent = '';
+      gameContainer.innerHTML = '';
+
+      const target = createTarget();
+      gameContainer.appendChild(target);
+
+      // Move target every 1 second
+      gameInterval = setInterval(() => {
+        const pos = randomPosition();
+        target.style.left = `${pos.x}px`;
+        target.style.top = `${pos.y}px`;
+      }, 1000);
+
+      // Countdown timer
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+
+      startBtn.disabled = true;
+      startBtn.textContent = 'Game in Progress...';
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      clearInterval(countdownInterval);
+      startBtn.disabled = false;
+      startBtn.textContent = 'Start Game';
+      messageEl.textContent = `Game Over! Your score: ${score}`;
+    }
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>
