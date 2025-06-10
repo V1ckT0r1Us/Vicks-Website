@@ -47,6 +47,24 @@
       0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
       50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
     }
+    .wizard-avatar {
+      margin: 0 auto 1.2rem auto;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff1, #0000 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      box-shadow: 0 0 18px var(--neon-accent);
+      transition: box-shadow 0.3s, background 0.3s;
+      animation: avatarGlow 1.5s infinite alternate;
+    }
+    @keyframes avatarGlow {
+      0% { box-shadow: 0 0 10px var(--neon-accent);}
+      100% { box-shadow: 0 0 25px var(--code-blue);}
+    }
     .step {
       display: none;
       font-size: 1.1rem;
@@ -120,12 +138,52 @@
       margin-top: 1.5rem;
       color: #00ffae;
       text-shadow: 0 0 8px var(--neon-accent);
+      min-height: 2em;
     }
+    .spell-cast {
+      font-size: 2.5rem;
+      animation: spellCast 0.7s cubic-bezier(.5,2,.5,.8) 1;
+      display: inline-block;
+      margin: 1rem 0;
+    }
+    @keyframes spellCast {
+      0% { opacity: 0; transform: scale(0.2) rotate(-30deg);}
+      60% { opacity: 1; transform: scale(1.2) rotate(8deg);}
+      100% { opacity: 1; transform: scale(1) rotate(0);}
+    }
+    .challenge {
+      font-size: 1.1rem;
+      color: #f6e9ff;
+      margin-top: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .mute-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.2);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      color: #fff;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 6px var(--neon-accent);
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .mute-btn:hover { background: rgba(0,0,0,0.35);}
   </style>
 </head>
 <body>
   <div class="wizard-container" role="form" aria-label="Wizard Quest">
+    <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
     <h1>Wizard Quest</h1>
+    <div class="wizard-avatar" id="wizardAvatar" title="Your wizard"></div>
     <div class="progress-bar" aria-hidden="true">
       <div class="progress-step active"></div>
       <div class="progress-step"></div>
@@ -169,6 +227,9 @@
     <div id="result" class="result" role="alert" aria-live="polite"></div>
   </div>
 
+  <!-- Optional: Simple spell sound -->
+  <audio id="spellSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfa7c3b.mp3"></audio>
+
   <script>
     const form = document.getElementById('wizardForm');
     const steps = form.querySelectorAll('.step');
@@ -176,8 +237,44 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const result = document.getElementById('result');
+    const wizardAvatar = document.getElementById('wizardAvatar');
+    const spellSound = document.getElementById('spellSound');
+    const muteBtn = document.getElementById('muteBtn');
 
     let currentStep = 0;
+    let muted = false;
+
+    // Wizard avatars for each magic type
+    const avatars = {
+      fire: "🧙‍♂️🔥",
+      ice: "🧙‍♂️❄️",
+      lightning: "🧙‍♂️⚡"
+    };
+
+    // Random quest challenges
+    const challenges = [
+      "Face the mighty dragon of Ember Mountain!",
+      "Find the lost Crystal of Frostvale.",
+      "Defeat the Storm Serpent in the Sky Caverns.",
+      "Rescue the enchanted owl from the Shadow Woods.",
+      "Solve the riddle of the Ancient Sphinx.",
+      "Light the beacon atop the Misty Tower.",
+      "Brew a potion to cure the sleeping village.",
+      "Escape the Maze of Mirrors unscathed.",
+      "Unlock the portal to the Arcane Realm.",
+      "Restore the magic to the Moonlit Lake."
+    ];
+
+    function updateAvatar() {
+      const magicType = document.getElementById('magicType').value;
+      wizardAvatar.textContent = avatars[magicType] || "🧙‍♂️";
+      // Avatar color glow
+      let color = "#9b59b6";
+      if (magicType === "fire") color = "#e67e22";
+      if (magicType === "ice") color = "#00bfff";
+      if (magicType === "lightning") color = "#f1c40f";
+      wizardAvatar.style.boxShadow = `0 0 18px ${color}`;
+    }
 
     function showStep(index) {
       steps.forEach((step, i) => {
@@ -187,6 +284,7 @@
       prevBtn.disabled = index === 0;
       nextBtn.textContent = index === steps.length - 1 ? 'Finish' : 'Next';
       result.textContent = '';
+      updateAvatar();
     }
 
     function validateStep(index) {
@@ -221,11 +319,29 @@
         const ready = document.getElementById('ready').value;
 
         if (ready === 'yes') {
-          result.textContent = `✨ Your quest begins! You wield ${magicType} magic with the spell "${spellName}". Good luck, wizard!`;
+          // Random challenge
+          const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+          // Spell animation and sound
+          result.innerHTML = `<span class="spell-cast">${avatars[magicType] || "🧙‍♂️"} <span style="font-size:1.5rem;">"${spellName}"</span></span>
+            <div class="challenge">${challenge}</div>
+            <span>✨ Your quest begins! Good luck, wizard!</span>`;
+          if (!muted) {
+            spellSound.currentTime = 0;
+            spellSound.play();
+          }
         } else {
           result.textContent = 'Take your time to prepare. Return when you are ready!';
         }
       }
+    });
+
+    // Avatar updates live
+    document.getElementById('magicType').addEventListener('change', updateAvatar);
+
+    // Mute/unmute sound
+    muteBtn.addEventListener('click', () => {
+      muted = !muted;
+      muteBtn.textContent = muted ? "🔇" : "🔊";
     });
 
     // Initialize
