@@ -6,20 +6,10 @@
 <title>Cosmic Math Solver 🌌 with Floating Bouncing Equations & Voice</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto+Slab&display=swap');
-  :root {
-    --main-bg: radial-gradient(circle at center, #0a043c 0%, #000010 100%);
-    --accent: #00e5ff;
-    --accent2: #00b8cc;
-    --glow: 0 0 7px #00e5ff;
-    --shadow: #003366;
-    --equation: #00e5ffcc;
-    --equation-shadow: #00e5ff;
-    --footer: #00e5ffaa;
-  }
   body {
     margin: 0;
     overflow: hidden;
-    background: var(--main-bg);
+    background: radial-gradient(circle at center, #0a043c 0%, #000010 100%);
     color: #e4f2f9;
     font-family: 'Roboto Slab', serif;
     display: flex;
@@ -33,11 +23,12 @@
   h1 {
     font-family: 'Orbitron', sans-serif;
     font-size: 3rem;
-    color: var(--accent);
+    color: #00e5ff;
     text-shadow:
-      0 0 2px var(--accent),
-      0 0 5px var(--accent2),
-      0 0 10px var(--accent2);
+      0 0 5px #00e5ff,
+      0 0 10px #00e5ff,
+      0 0 20px #00e5ff,
+      0 0 40px #00e5ff;
     margin-bottom: 10px;
     z-index: 10;
   }
@@ -65,23 +56,23 @@
     border: none;
     border-radius: 8px 0 0 8px;
     outline: none;
-    background: var(--shadow);
+    background: #1a0a5e;
     color: #e4f2f9;
-    box-shadow: inset 0 0 6px var(--shadow);
+    box-shadow: inset 0 0 10px #003366;
   }
   #solve-btn, #voice-btn {
-    background: var(--accent);
+    background: #00e5ff;
     border: none;
     padding: 0 25px;
     font-size: 1.1rem;
     font-weight: bold;
     color: #0a043c;
     cursor: pointer;
-    box-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent2);
-    transition: background 0.3s ease, box-shadow 0.3s;
+    box-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff;
+    transition: background 0.3s ease;
   }
   #solve-btn:hover, #voice-btn:hover {
-    background: var(--accent2);
+    background: #00b8cc;
   }
   #solve-btn { border-radius: 0 8px 0 0; }
   #voice-btn { border-radius: 0 0 8px 0; }
@@ -89,14 +80,14 @@
     margin-top: 30px;
     max-width: 600px;
     width: 100%;
-    background: var(--shadow);
+    background: #1a0a5e;
     border-radius: 12px;
     padding: 20px;
     font-family: 'Consolas', monospace;
     font-size: 1.1rem;
     min-height: 120px;
     color: #cce7ff;
-    box-shadow: var(--glow);
+    box-shadow: 0 0 15px #003366;
     white-space: pre-wrap;
     overflow-y: auto;
     z-index: 10;
@@ -120,15 +111,15 @@
   }
   .equation {
     position: absolute;
-    color: var(--equation);
+    color: #00e5ffcc;
     font-family: 'Consolas', monospace;
     font-weight: bold;
     font-size: 14px;
     user-select: none;
     white-space: nowrap;
     text-shadow:
-      0 0 2px var(--equation-shadow),
-      0 0 5px var(--equation-shadow);
+      0 0 5px #00e5ff,
+      0 0 10px #00e5ff;
     will-change: transform;
   }
   footer {
@@ -136,7 +127,7 @@
     text-align: center;
     padding: 12px 0;
     background: transparent;
-    color: var(--footer);
+    color: #00e5ffaa;
     font-family: 'Roboto Slab', serif;
     font-size: 0.9rem;
     position: fixed;
@@ -144,7 +135,7 @@
     left: 0;
     z-index: 20;
     user-select: none;
-    text-shadow: 0 0 3px var(--accent);
+    text-shadow: 0 0 5px #00e5ff;
   }
 </style>
 </head>
@@ -191,6 +182,7 @@
   const voiceBtn = document.getElementById('voice-btn');
   const resultEl = document.getElementById('result-container');
 
+  // Rotate quotes every 12 seconds
   function rotateQuotes() {
     let idx = Math.floor(Math.random() * quotes.length);
     quoteEl.style.opacity = 0;
@@ -209,7 +201,7 @@
       return;
     }
     resultEl.textContent = "Solving...";
-    const appId = "YOUR_WOLFRAM_ALPHA_API_KEY"; // <-- Replace with your API key
+    const appId = "KWUP34-YK44AAJR9E"; // <-- Your Wolfram Alpha AppID
     const url = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(query)}&format=plaintext&output=JSON&appid=${appId}`;
     try {
       const response = await fetch(url);
@@ -296,7 +288,6 @@
   const ctx = canvas.getContext('2d');
   let stars = [];
   let width, height;
-  let starColor = getComputedStyle(document.documentElement).getPropertyValue('--accent');
   function Star() {
     this.x = Math.random() * width;
     this.y = Math.random() * height;
@@ -314,9 +305,9 @@
   };
   Star.prototype.draw = function() {
     ctx.beginPath();
-    ctx.fillStyle = starColor;
-    ctx.shadowColor = starColor;
-    ctx.shadowBlur = 5;
+    ctx.fillStyle = '#00e5ff';
+    ctx.shadowColor = '#00e5ff';
+    ctx.shadowBlur = 8;
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
   };
@@ -413,126 +404,6 @@
       eq.y = Math.min(eq.y, window.innerHeight - eq.height);
     });
   });
-
-  // === Dynamic Theme Changer ===
-  const palettes = [
-    // Blue/Cyan
-    {
-      '--main-bg': 'radial-gradient(circle at center, #0a043c 0%, #000010 100%)',
-      '--accent': '#00e5ff',
-      '--accent2': '#00b8cc',
-      '--glow': '0 0 7px #00e5ff',
-      '--shadow': '#003366',
-      '--equation': '#00e5ffcc',
-      '--equation-shadow': '#00e5ff',
-      '--footer': '#00e5ffaa'
-    },
-    // Purple/Neon
-    {
-      '--main-bg': 'linear-gradient(135deg, #3a3d5c, #2c3e50 90%)',
-      '--accent': '#9b59b6',
-      '--accent2': '#3498db',
-      '--glow': '0 0 7px #9b59b6',
-      '--shadow': '#9b59b6',
-      '--equation': '#b67affcc',
-      '--equation-shadow': '#9b59b6',
-      '--footer': '#b67aff'
-    },
-    // Pink/Indigo
-    {
-      '--main-bg': 'linear-gradient(135deg, #e84393, #6c5ce7 90%)',
-      '--accent': '#fd79a8',
-      '--accent2': '#00b894',
-      '--glow': '0 0 7px #fd79a8',
-      '--shadow': '#e84393',
-      '--equation': '#fd79a8cc',
-      '--equation-shadow': '#e84393',
-      '--footer': '#fd79a8'
-    },
-    // Green/Teal
-    {
-      '--main-bg': 'linear-gradient(135deg, #16a085, #1abc9c 90%)',
-      '--accent': '#00ffae',
-      '--accent2': '#16a085',
-      '--glow': '0 0 7px #00ffae',
-      '--shadow': '#16a085',
-      '--equation': '#00ffaecc',
-      '--equation-shadow': '#00ffae',
-      '--footer': '#00ffae'
-    },
-    // Orange
-    {
-      '--main-bg': 'linear-gradient(135deg, #f39c12, #e67e22 90%)',
-      '--accent': '#f6b93b',
-      '--accent2': '#e67e22',
-      '--glow': '0 0 7px #f6b93b',
-      '--shadow': '#e67e22',
-      '--equation': '#f6b93bcc',
-      '--equation-shadow': '#f6b93b',
-      '--footer': '#f6b93b'
-    },
-    // Gold
-    {
-      '--main-bg': 'linear-gradient(135deg, #f7ca18, #f9d423 90%)',
-      '--accent': '#f9d423',
-      '--accent2': '#f7ca18',
-      '--glow': '0 0 7px #f9d423',
-      '--shadow': '#f7ca18',
-      '--equation': '#f9d423cc',
-      '--equation-shadow': '#f9d423',
-      '--footer': '#f9d423'
-    },
-    // Red
-    {
-      '--main-bg': 'linear-gradient(135deg, #c0392b, #e74c3c 90%)',
-      '--accent': '#e74c3c',
-      '--accent2': '#c0392b',
-      '--glow': '0 0 7px #e74c3c',
-      '--shadow': '#c0392b',
-      '--equation': '#e74c3ccc',
-      '--equation-shadow': '#e74c3c',
-      '--footer': '#e74c3c'
-    },
-    // Teal/Blue
-    {
-      '--main-bg': 'linear-gradient(135deg, #2980b9, #6dd5fa 90%)',
-      '--accent': '#6dd5fa',
-      '--accent2': '#2980b9',
-      '--glow': '0 0 7px #6dd5fa',
-      '--shadow': '#2980b9',
-      '--equation': '#6dd5facc',
-      '--equation-shadow': '#6dd5fa',
-      '--footer': '#6dd5fa'
-    }
-  ];
-  let paletteIndex = 0;
-  function applyPalette(p) {
-    document.body.style.background = p['--main-bg'];
-    document.querySelector('h1').style.color = p['--accent'];
-    document.querySelector('h1').style.textShadow =
-      `0 0 2px ${p['--accent']},0 0 5px ${p['--accent2']},0 0 10px ${p['--accent2']}`;
-    document.querySelectorAll('#solve-btn, #voice-btn').forEach(btn => {
-      btn.style.background = p['--accent'];
-      btn.style.boxShadow = `0 0 5px ${p['--accent']},0 0 10px ${p['--accent2']}`;
-    });
-    document.getElementById('math-input').style.background = p['--shadow'];
-    document.getElementById('math-input').style.boxShadow = `inset 0 0 6px ${p['--shadow']}`;
-    document.getElementById('result-container').style.background = p['--shadow'];
-    document.getElementById('result-container').style.boxShadow = p['--glow'];
-    document.querySelectorAll('.equation').forEach(eq => {
-      eq.style.color = p['--equation'];
-      eq.style.textShadow = `0 0 2px ${p['--equation-shadow']},0 0 5px ${p['--equation-shadow']}`;
-    });
-    document.querySelector('footer').style.color = p['--footer'];
-    document.querySelector('footer').style.textShadow = `0 0 3px ${p['--accent']}`;
-    starColor = p['--accent'];
-  }
-  function nextPalette() {
-    paletteIndex = (paletteIndex + 1) % palettes.length;
-    applyPalette(palettes[paletteIndex]);
-  }
-  applyPalette(palettes[paletteIndex]);
-  setInterval(nextPalette, 30000);
 </script>
 
 </body>
