@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jigsaw Puzzle!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .puzzle-container {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      max-width: 440px;
+      text-align: center;
+      position: relative;
+    }
+    .puzzle-container h1 {
+      font-size: 2.1rem;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .jigsaw-board {
+      display: grid;
+      grid-template-columns: repeat(2, 80px);
+      grid-template-rows: repeat(2, 80px);
+      gap: 10px;
+      justify-content: center;
+      margin: 1.2rem auto 1.5rem auto;
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      box-shadow: 0 0 10px var(--code-blue);
+      padding: 16px;
+      width: max-content;
+    }
+    .jigsaw-slot {
+      width: 80px;
+      height: 80px;
+      background: #fff3;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 6px var(--neon-accent);
+      transition: box-shadow 0.2s;
+    }
+    .jigsaw-slot.over {
+      box-shadow: 0 0 18px var(--code-blue);
+      background: #fff5;
+    }
+    .jigsaw-piece {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: #fff;
+      font-size: 2.2rem;
+      font-weight: bold;
+      box-shadow: 0 0 10px var(--neon-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+      margin: 0 2px;
+      transition: box-shadow 0.2s;
+    }
+    .pieces-tray {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .success {
+      color: #00ffae;
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-shadow: 0 0 8px var(--neon-accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="puzzle-container">
+    <h1>Jigsaw Puzzle!</h1>
+    <div class="jigsaw-board" id="board">
+      <div class="jigsaw-slot" data-pos="0"></div>
+      <div class="jigsaw-slot" data-pos="1"></div>
+      <div class="jigsaw-slot" data-pos="2"></div>
+      <div class="jigsaw-slot" data-pos="3"></div>
+    </div>
+    <div class="pieces-tray" id="tray">
+      <div class="jigsaw-piece" draggable="true" data-piece="0" style="background: linear-gradient(135deg, #e67e22, #f1c40f);">🍊</div>
+      <div class="jigsaw-piece" draggable="true" data-piece="1" style="background: linear-gradient(135deg, #16a085, #1abc9c);">🌊</div>
+      <div class="jigsaw-piece" draggable="true" data-piece="2" style="background: linear-gradient(135deg, #e84393, #fd79a8);">🌸</div>
+      <div class="jigsaw-piece" draggable="true" data-piece="3" style="background: linear-gradient(135deg, #6c5ce7, #00b894);">🌿</div>
+    </div>
+    <div id="success"></div>
+  </div>
+  <script>
+    // Drag and Drop Logic
+    const slots = document.querySelectorAll('.jigsaw-slot');
+    const pieces = document.querySelectorAll('.jigsaw-piece');
+    const tray = document.getElementById('tray');
+    const successDiv = document.getElementById('success');
+
+    let draggedPiece = null;
+
+    pieces.forEach(piece => {
+      piece.addEventListener('dragstart', e => {
+        draggedPiece = piece;
+        setTimeout(() => piece.style.opacity = '0.5', 0);
+      });
+      piece.addEventListener('dragend', e => {
+        draggedPiece = null;
+        piece.style.opacity = '1';
+      });
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener('dragover', e => {
+        e.preventDefault();
+        slot.classList.add('over');
+      });
+      slot.addEventListener('dragleave', e => {
+        slot.classList.remove('over');
+      });
+      slot.addEventListener('drop', e => {
+        e.preventDefault();
+        slot.classList.remove('over');
+        if (!slot.hasChildNodes() && draggedPiece) {
+          slot.appendChild(draggedPiece);
+          checkSolved();
+        }
+      });
+    });
+
+    // Allow pieces to be dragged back to tray
+    tray.addEventListener('dragover', e => e.preventDefault());
+    tray.addEventListener('drop', e => {
+      if (draggedPiece && !tray.contains(draggedPiece)) {
+        tray.appendChild(draggedPiece);
+        checkSolved();
+      }
+    });
+
+    function checkSolved() {
+      // Solution: piece 0 in slot 0, piece 1 in slot 1, etc.
+      let solved = true;
+      for (let i = 0; i < 4; i++) {
+        const slot = document.querySelector(`.jigsaw-slot[data-pos="${i}"]`);
+        if (!slot.firstChild || slot.firstChild.getAttribute('data-piece') != i) {
+          solved = false;
+          break;
+        }
+      }
+      if (solved) {
+        successDiv.innerHTML = '<div class="success">🎉 Puzzle Complete! Well done!</div>';
+      } else {
+        successDiv.innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>
