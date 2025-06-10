@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mystery Solver</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .container {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .clue {
+      font-size: 1.2rem;
+      margin-bottom: 1.8rem;
+      color: #f6e9ff;
+      line-height: 1.5;
+      text-align: left;
+    }
+    select, button {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      padding: 0.7em 1.2em;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--neon-accent);
+      transition: background 0.3s, box-shadow 0.3s;
+      margin-bottom: 1rem;
+      width: 100%;
+      max-width: 300px;
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      font-weight: 600;
+    }
+    select:hover, select:focus, button:hover, button:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 20px var(--neon-accent);
+      color: var(--dark-bg);
+    }
+    .feedback {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      min-height: 1.5em;
+      text-shadow: 0 0 8px var(--neon-accent);
+    }
+    .correct {
+      color: #00ffae;
+    }
+    .incorrect {
+      color: #ff4c7d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Mystery solver game">
+    <h1>Mystery Solver</h1>
+    <div class="clue">
+      <p><strong>Clues:</strong></p>
+      <ul>
+        <li>The crime happened in the <em>ballroom</em>.</li>
+        <li>The weapon was <em>poison</em>.</li>
+        <li>Mr. Cale was seen near the crime scene.</li>
+      </ul>
+      <p>Who is the culprit?</p>
+    </div>
+    <select id="suspect" aria-label="Select your suspect">
+      <option value="" disabled selected>Choose a suspect</option>
+      <option value="Mr. Cale">Mr. Cale</option>
+      <option value="Ms. Van Cleave">Ms. Van Cleave</option>
+      <option value="Mrs. Sparr">Mrs. Sparr</option>
+      <option value="Mr. Parks">Mr. Parks</option>
+    </select>
+    <button onclick="checkAnswer()">Submit Guess</button>
+    <div id="feedback" class="feedback" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function checkAnswer() {
+      const suspect = document.getElementById('suspect').value;
+      const feedback = document.getElementById('feedback');
+      if (!suspect) {
+        feedback.textContent = 'Please select a suspect before submitting.';
+        feedback.className = 'feedback incorrect';
+        return;
+      }
+      // The correct culprit is Mr. Cale (based on clues)
+      if (suspect === 'Mr. Cale') {
+        feedback.textContent = '🎉 Correct! Mr. Cale is the culprit!';
+        feedback.className = 'feedback correct';
+      } else {
+        feedback.textContent = `❌ Sorry, ${suspect} is not the culprit. Try again!`;
+        feedback.className = 'feedback incorrect';
+      }
+    }
+  </script>
+</body>
+</html>
