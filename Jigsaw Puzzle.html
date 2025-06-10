@@ -69,6 +69,8 @@
       justify-content: center;
       box-shadow: 0 0 6px var(--neon-accent);
       transition: box-shadow 0.2s;
+      position: relative;
+      z-index: 1;
     }
     .jigsaw-slot.over {
       box-shadow: 0 0 18px var(--code-blue);
@@ -90,6 +92,15 @@
       user-select: none;
       margin: 0 2px;
       transition: box-shadow 0.2s;
+      position: relative;
+      z-index: 2;
+      touch-action: none; /* Prevent scrolling while dragging */
+    }
+    .jigsaw-piece.dragging {
+      opacity: 0.6;
+      z-index: 1000;
+      pointer-events: none;
+      position: absolute;
     }
     .pieces-tray {
       display: flex;
@@ -125,12 +136,11 @@
     <div id="success"></div>
   </div>
   <script>
-    // Drag and Drop Logic
+    // --- Desktop Drag and Drop ---
     const slots = document.querySelectorAll('.jigsaw-slot');
     const pieces = document.querySelectorAll('.jigsaw-piece');
     const tray = document.getElementById('tray');
     const successDiv = document.getElementById('success');
-
     let draggedPiece = null;
 
     pieces.forEach(piece => {
@@ -162,7 +172,6 @@
       });
     });
 
-    // Allow pieces to be dragged back to tray
     tray.addEventListener('dragover', e => e.preventDefault());
     tray.addEventListener('drop', e => {
       if (draggedPiece && !tray.contains(draggedPiece)) {
@@ -171,8 +180,74 @@
       }
     });
 
+    // --- Touch Support ---
+    let touchPiece = null;
+    let offsetX = 0, offsetY = 0;
+
+    pieces.forEach(piece => {
+      piece.addEventListener('touchstart', function(e) {
+        if (e.touches.length !== 1) return;
+        touchPiece = piece;
+        touchPiece.classList.add('dragging');
+        const rect = piece.getBoundingClientRect();
+        offsetX = e.touches[0].clientX - rect.left;
+        offsetY = e.touches[0].clientY - rect.top;
+        piece.style.left = rect.left + 'px';
+        piece.style.top = rect.top + 'px';
+        piece.style.width = rect.width + 'px';
+        piece.style.height = rect.height + 'px';
+        piece.style.position = 'fixed';
+        piece.style.pointerEvents = 'none';
+        piece.style.zIndex = 1000;
+        document.body.appendChild(piece);
+      });
+
+      piece.addEventListener('touchmove', function(e) {
+        if (!touchPiece || e.touches.length !== 1) return;
+        e.preventDefault();
+        let x = e.touches[0].clientX - offsetX;
+        let y = e.touches[0].clientY - offsetY;
+        touchPiece.style.left = x + 'px';
+        touchPiece.style.top = y + 'px';
+      });
+
+      piece.addEventListener('touchend', function(e) {
+        if (!touchPiece) return;
+        // Find the slot under the finger
+        let dropped = false;
+        slots.forEach(slot => {
+          const rect = slot.getBoundingClientRect();
+          const x = e.changedTouches[0].clientX;
+          const y = e.changedTouches[0].clientY;
+          if (
+            x >= rect.left &&
+            x <= rect.right &&
+            y >= rect.top &&
+            y <= rect.bottom &&
+            !slot.hasChildNodes()
+          ) {
+            slot.appendChild(touchPiece);
+            dropped = true;
+            checkSolved();
+          }
+        });
+        if (!dropped) {
+          tray.appendChild(touchPiece);
+          checkSolved();
+        }
+        touchPiece.classList.remove('dragging');
+        touchPiece.style.position = '';
+        touchPiece.style.left = '';
+        touchPiece.style.top = '';
+        touchPiece.style.width = '';
+        touchPiece.style.height = '';
+        touchPiece.style.pointerEvents = '';
+        touchPiece.style.zIndex = '';
+        touchPiece = null;
+      });
+    });
+
     function checkSolved() {
-      // Solution: piece 0 in slot 0, piece 1 in slot 1, etc.
       let solved = true;
       for (let i = 0; i < 4; i++) {
         const slot = document.querySelector(`.jigsaw-slot[data-pos="${i}"]`);
