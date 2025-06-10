@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zombie Survival</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    h1 {
+      margin: 1rem 0 0.5rem;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    #gameCanvas {
+      background: #111;
+      border-radius: 20px;
+      box-shadow: var(--glow);
+    }
+    #scoreBoard {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--neon-accent);
+      text-shadow: 0 0 8px var(--neon-accent);
+      margin-bottom: 0.5rem;
+    }
+    #startBtn {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.8em 2em;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 15px var(--neon-accent);
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+      margin-bottom: 1rem;
+    }
+    #startBtn:hover, #startBtn:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 25px var(--neon-accent);
+      color: var(--dark-bg);
+      outline: none;
+    }
+    #gameOver {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff4c7d;
+      text-shadow: 0 0 12px #ff4c7d;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      user-select: none;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zombie Survival</h1>
+  <div id="scoreBoard">Score: 0</div>
+  <canvas id="gameCanvas" width="480" height="600" tabindex="0" role="main" aria-label="Zombie Survival game area"></canvas>
+  <div id="gameOver">Game Over! Tap Start to play again.</div>
+  <button id="startBtn">Start Game</button>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverText = document.getElementById('gameOver');
+
+    let playerX = canvas.width / 2;
+    let playerY = canvas.height / 2;
+    const playerSize = 20;
+    let zombies = [];
+    let score = 0;
+    let gameInterval;
+    let zombieInterval;
+    let gameRunning = false;
+
+    function drawPlayer() {
+      ctx.beginPath();
+      ctx.arc(playerX, playerY, playerSize, 0, Math.PI * 2);
+      ctx.fillStyle = '#00ffae';
+      ctx.shadowColor = '#00ffae';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function createZombie() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      zombies.push({
+        x: x,
+        y: y,
+        speedX: (Math.random() - 0.5) * 2,
+        speedY: (Math.random() - 0.5) * 2,
+        size: 15
+      });
+    }
+
+    function drawZombies() {
+      zombies.forEach(zombie => {
+        ctx.beginPath();
+        ctx.rect(zombie.x - zombie.size / 2, zombie.y - zombie.size / 2, zombie.size, zombie.size);
+        ctx.fillStyle = '#e74c3c';
+        ctx.shadowColor = '#e74c3c';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.closePath();
+      });
+    }
+
+    function moveZombies() {
+      zombies.forEach((zombie, index) => {
+        zombie.x += zombie.speedX;
+        zombie.y += zombie.speedY;
+
+        // Bounce off walls
+        if (zombie.x < 0 || zombie.x > canvas.width) zombie.speedX = -zombie.speedX;
+        if (zombie.y < 0 || zombie.y > canvas.height) zombie.speedY = -zombie.speedY;
+
+        // Collision detection with player
+        const dx = playerX - zombie.x;
+        const dy = playerY - zombie.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < playerSize + zombie.size / 2) {
+          endGame();
+        }
+      });
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPlayer();
+      moveZombies();
+      drawZombies();
+    }
+
+    function startGame() {
+      if (gameRunning) return;
+      gameRunning = true;
+      score = 0;
+      scoreBoard.textContent = 'Score: 0';
+      gameOverText.style.display = 'none';
+      ctx.shadowBlur = 0;
+
+      playerX = canvas.width / 2;
+      playerY = canvas.height / 2;
+
+      // Clear zombies
+      zombies = [];
+
+      // Set shadow styles
+      ctx.shadowColor = '#00ffae';
+      ctx.shadowBlur = 10;
+
+      gameInterval = setInterval(update, 20);
+      zombieInterval = setInterval(createZombie, 1000);
+    }
+
+    function endGame() {
+      gameRunning = false;
+      clearInterval(gameInterval);
+      clearInterval(zombieInterval);
+      gameOverText.style.display = 'block';
+      ctx.shadowBlur = 0;
+    }
+
+    // Touch and keyboard movement
+    let moveX = 0;
+    let moveY = 0;
+    const moveSpeed = 3;
+
+    function updatePlayerPosition() {
+      playerX += moveX;
+      playerY += moveY;
+      // Boundary constraints
+      if (playerX < 0) playerX = 0;
+      if (playerX > canvas.width) playerX = canvas.width;
+      if (playerY < 0) playerY = 0;
+      if (playerY > canvas.height) playerY = canvas.height;
+    }
+
+    // Keyboard
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') moveX = -moveSpeed;
+      if (e.key === 'ArrowRight' || e.key === 'd') moveX = moveSpeed;
+      if (e.key === 'ArrowUp' || e.key === 'w') moveY = -moveSpeed;
+      if (e.key === 'ArrowDown' || e.key === 's') moveY = moveSpeed;
+    });
+    window.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'ArrowRight' || e.key === 'd') moveX = 0;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') moveY = 0;
+    });
+
+    // Touch - follow touch movement
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+    });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        playerX = e.touches[0].clientX - canvas.offsetLeft;
+        playerY = e.touches[0].clientY - canvas.offsetTop;
+        updatePlayerPosition();
+      }
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>

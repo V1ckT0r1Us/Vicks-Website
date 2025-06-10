@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Speed Racer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      user-select: none;
+      overflow: hidden;
+    }
+    h1 {
+      margin: 1rem 0 0.5rem;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    #gameArea {
+      position: relative;
+      width: 320px;
+      height: 480px;
+      background: #111;
+      border-radius: 20px;
+      box-shadow: var(--glow);
+      overflow: hidden;
+      margin-bottom: 1rem;
+      touch-action: none;
+    }
+    .road {
+      position: absolute;
+      width: 100%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        to bottom,
+        #444 0 40px,
+        #222 40px 60px
+      );
+      animation: roadMove 1s linear infinite;
+      top: -100%;
+      left: 0;
+      z-index: 0;
+    }
+    @keyframes roadMove {
+      0% { top: -100%; }
+      100% { top: 0; }
+    }
+    .car {
+      position: absolute;
+      width: 50px;
+      height: 90px;
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      border-radius: 12px;
+      bottom: 20px;
+      left: 135px;
+      box-shadow: 0 0 15px var(--neon-accent);
+      transition: left 0.1s;
+      user-select: none;
+      z-index: 10;
+    }
+    .enemy {
+      position: absolute;
+      width: 50px;
+      height: 90px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border-radius: 12px;
+      top: -100px;
+      box-shadow: 0 0 15px #e74c3c;
+      user-select: none;
+      z-index: 9;
+    }
+    #scoreBoard {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--neon-accent);
+      text-shadow: 0 0 8px var(--neon-accent);
+      margin-bottom: 0.5rem;
+    }
+    #startBtn {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.8em 2em;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 15px var(--neon-accent);
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+      margin-bottom: 1rem;
+    }
+    #startBtn:hover, #startBtn:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 25px var(--neon-accent);
+      color: var(--dark-bg);
+      outline: none;
+    }
+    #gameOver {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff4c7d;
+      text-shadow: 0 0 12px #ff4c7d;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      user-select: none;
+      z-index: 20;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Speed Racer</h1>
+  <div id="scoreBoard">Score: 0</div>
+  <div id="gameArea" aria-label="Speed Racer game area" role="main" tabindex="0">
+    <div class="road"></div>
+    <div class="car" id="playerCar" aria-label="Player car"></div>
+  </div>
+  <div id="gameOver">Game Over! Press Start to play again.</div>
+  <button id="startBtn">Start Game</button>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const playerCar = document.getElementById('playerCar');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverText = document.getElementById('gameOver');
+
+    const laneWidth = 80;
+    const lanes = [40, 120, 200, 280]; // x positions for lanes
+    let playerLane = 1; // start in second lane (index)
+    let enemies = [];
+    let enemySpeed = 4;
+    let score = 0;
+    let gameInterval;
+    let enemyInterval;
+    let gameRunning = false;
+
+    function createEnemy() {
+      const enemy = document.createElement('div');
+      enemy.classList.add('enemy');
+      enemy.style.left = lanes[Math.floor(Math.random() * lanes.length)] + 'px';
+      enemy.style.top = '-100px';
+      gameArea.appendChild(enemy);
+      enemies.push(enemy);
+    }
+
+    function moveEnemies() {
+      enemies.forEach((enemy, index) => {
+        let top = parseFloat(enemy.style.top);
+        if (top > gameArea.clientHeight) {
+          enemy.remove();
+          enemies.splice(index, 1);
+          score++;
+          scoreBoard.textContent = 'Score: ' + score;
+          // Increase speed every 5 points
+          if (score % 5 === 0) enemySpeed += 0.5;
+          return;
+        }
+        enemy.style.top = (top + enemySpeed) + 'px';
+
+        // Collision detection
+        const enemyRect = enemy.getBoundingClientRect();
+        const playerRect = playerCar.getBoundingClientRect();
+        if (!(enemyRect.right < playerRect.left || enemyRect.left > playerRect.right || enemyRect.bottom < playerRect.top || enemyRect.top > playerRect.bottom)) {
+          endGame();
+        }
+      });
+    }
+
+    function update() {
+      moveEnemies();
+    }
+
+    function startGame() {
+      if (gameRunning) return;
+      gameRunning = true;
+      score = 0;
+      enemySpeed = 4;
+      scoreBoard.textContent = 'Score: 0';
+      gameOverText.style.display = 'none';
+
+      // Remove enemies
+      enemies.forEach(enemy => enemy.remove());
+      enemies = [];
+
+      playerLane = 1;
+      playerCar.style.left = lanes[playerLane] + 'px';
+
+      gameInterval = setInterval(update, 30);
+      enemyInterval = setInterval(createEnemy, 1500);
+    }
+
+    function endGame() {
+      gameRunning = false;
+      clearInterval(gameInterval);
+      clearInterval(enemyInterval);
+      gameOverText.style.display = 'block';
+    }
+
+    function movePlayer(dir) {
+      playerLane += dir;
+      if (playerLane < 0) playerLane = 0;
+      if (playerLane > lanes.length - 1) playerLane = lanes.length - 1;
+      playerCar.style.left = lanes[playerLane] + 'px';
+    }
+
+    // Keyboard controls
+    window.addEventListener('keydown', e => {
+      if (!gameRunning) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a') {
+        movePlayer(-1);
+      } else if (e.key === 'ArrowRight' || e.key === 'd') {
+        movePlayer(1);
+      }
+    });
+
+    // Touch controls: swipe left/right to change lanes
+    let touchStartX = null;
+
+    gameArea.addEventListener('touchstart', e => {
+      if (!gameRunning) return;
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+      }
+    });
+
+    gameArea.addEventListener('touchend', e => {
+      if (!gameRunning || touchStartX === null) return;
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+      if (Math.abs(deltaX) > 30) { // swipe threshold
+        if (deltaX > 0) {
+          movePlayer(1);
+        } else {
+          movePlayer(-1);
+        }
+      }
+      touchStartX = null;
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>
