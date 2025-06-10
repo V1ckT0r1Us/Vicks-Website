@@ -11,7 +11,7 @@
       --code-blue: #3498db;
       --neon-accent: #9b59b6;
       --dark-bg: #2c3e50;
-      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+      --glow: 0 0 8px rgba(155, 89, 182, 0.3);
     }
     body {
       margin: 0;
@@ -27,7 +27,7 @@
     }
     h1 {
       margin: 1rem 0 0.5rem;
-      font-size: 2.5rem;
+      font-size: 2rem;
       background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
       -webkit-background-clip: text;
       background-clip: text;
@@ -36,15 +36,17 @@
       text-align: center;
     }
     @keyframes glowPulse {
-      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
-      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+      0%, 100% { text-shadow: 0 0 2px var(--neon-accent), 0 0 4px var(--neon-accent);}
+      50% { text-shadow: 0 0 6px var(--code-blue), 0 0 10px var(--code-blue);}
     }
     #gameArea {
       position: relative;
-      width: 320px;
-      height: 480px;
+      width: 96vw;
+      max-width: 340px;
+      height: 65vw;
+      max-height: 520px;
       background: #111;
-      border-radius: 20px;
+      border-radius: 16px;
       box-shadow: var(--glow);
       overflow: hidden;
       margin-bottom: 1rem;
@@ -68,35 +70,39 @@
       0% { top: -100%; }
       100% { top: 0; }
     }
-    .car {
+    .car, .enemy {
       position: absolute;
-      width: 50px;
-      height: 90px;
-      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
-      border-radius: 12px;
-      bottom: 20px;
-      left: 135px;
-      box-shadow: 0 0 15px var(--neon-accent);
-      transition: left 0.1s;
+      width: 18%;
+      min-width: 36px;
+      max-width: 60px;
+      height: 20%;
+      min-height: 60px;
+      max-height: 100px;
+      border-radius: 9px;
       user-select: none;
       z-index: 10;
+      left: 0;
+      box-shadow: 0 0 6px var(--neon-accent);
+      transition: left 0.1s;
+    }
+    .car {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      box-shadow: 0 0 8px var(--neon-accent);
+      z-index: 11;
+      bottom: 10px;
     }
     .enemy {
-      position: absolute;
-      width: 50px;
-      height: 90px;
       background: linear-gradient(135deg, #e74c3c, #c0392b);
-      border-radius: 12px;
+      box-shadow: 0 0 6px #e74c3c;
       top: -100px;
-      box-shadow: 0 0 15px #e74c3c;
-      user-select: none;
-      z-index: 9;
+      bottom: unset;
+      z-index: 10;
     }
     #scoreBoard {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: var(--neon-accent);
-      text-shadow: 0 0 8px var(--neon-accent);
+      text-shadow: 0 0 4px var(--neon-accent);
       margin-bottom: 0.5rem;
     }
     #startBtn {
@@ -105,10 +111,10 @@
       border: none;
       border-radius: 12px;
       padding: 0.8em 2em;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      box-shadow: 0 0 15px var(--neon-accent);
+      box-shadow: 0 0 8px var(--neon-accent);
       cursor: pointer;
       transition: background 0.3s, box-shadow 0.3s;
       user-select: none;
@@ -116,15 +122,15 @@
     }
     #startBtn:hover, #startBtn:focus {
       background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
-      box-shadow: 0 0 25px var(--neon-accent);
+      box-shadow: 0 0 12px var(--neon-accent);
       color: var(--dark-bg);
       outline: none;
     }
     #gameOver {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #ff4c7d;
-      text-shadow: 0 0 12px #ff4c7d;
+      text-shadow: 0 0 8px #ff4c7d;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -134,6 +140,10 @@
       z-index: 20;
       text-align: center;
       width: 100%;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.1rem; }
+      #gameArea { max-width: 98vw; }
     }
   </style>
 </head>
@@ -154,8 +164,7 @@
     const startBtn = document.getElementById('startBtn');
     const gameOverText = document.getElementById('gameOver');
 
-    const laneWidth = 80;
-    const lanes = [40, 120, 200, 280]; // x positions for lanes
+    let lanes = [];
     let playerLane = 1; // start in second lane (index)
     let enemies = [];
     let enemySpeed = 4;
@@ -163,11 +172,25 @@
     let gameInterval;
     let enemyInterval;
     let gameRunning = false;
+    const numLanes = 4; // Four lanes
+
+    function updateLanes() {
+      // Responsive lane positions
+      const areaWidth = gameArea.clientWidth;
+      lanes = [];
+      for (let i = 0; i < numLanes; i++) {
+        let laneX = ((i + 0.5) * areaWidth) / numLanes - playerCar.offsetWidth / 2;
+        lanes.push(laneX);
+      }
+      // Snap player to lane
+      playerCar.style.left = lanes[playerLane] + 'px';
+    }
 
     function createEnemy() {
       const enemy = document.createElement('div');
       enemy.classList.add('enemy');
-      enemy.style.left = lanes[Math.floor(Math.random() * lanes.length)] + 'px';
+      const laneIdx = Math.floor(Math.random() * numLanes);
+      enemy.style.left = lanes[laneIdx] + 'px';
       enemy.style.top = '-100px';
       gameArea.appendChild(enemy);
       enemies.push(enemy);
@@ -181,7 +204,6 @@
           enemies.splice(index, 1);
           score++;
           scoreBoard.textContent = 'Score: ' + score;
-          // Increase speed every 5 points
           if (score % 5 === 0) enemySpeed += 0.5;
           return;
         }
@@ -213,7 +235,7 @@
       enemies = [];
 
       playerLane = 1;
-      playerCar.style.left = lanes[playerLane] + 'px';
+      updateLanes();
 
       gameInterval = setInterval(update, 30);
       enemyInterval = setInterval(createEnemy, 1500);
@@ -245,19 +267,17 @@
 
     // Touch controls: swipe left/right to change lanes
     let touchStartX = null;
-
     gameArea.addEventListener('touchstart', e => {
       if (!gameRunning) return;
       if (e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
       }
     });
-
     gameArea.addEventListener('touchend', e => {
       if (!gameRunning || touchStartX === null) return;
       const touchEndX = e.changedTouches[0].clientX;
       const deltaX = touchEndX - touchStartX;
-      if (Math.abs(deltaX) > 30) { // swipe threshold
+      if (Math.abs(deltaX) > 30) {
         if (deltaX > 0) {
           movePlayer(1);
         } else {
@@ -266,6 +286,10 @@
       }
       touchStartX = null;
     });
+
+    // Responsive: update lanes on resize
+    window.addEventListener('resize', updateLanes);
+    setTimeout(updateLanes, 100);
 
     startBtn.addEventListener('click', startGame);
   </script>
