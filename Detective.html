@@ -89,49 +89,189 @@
     .incorrect {
       color: #ff4c7d;
     }
+    .score {
+      margin-top: 2rem;
+      font-size: 1.25rem;
+      color: #00ffae;
+      font-weight: 700;
+      text-shadow: 0 0 10px var(--neon-accent);
+    }
+    .question-number {
+      color: var(--neon-accent);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div class="container" role="main" aria-label="Mystery solver game">
     <h1>Mystery Solver</h1>
-    <div class="clue">
-      <p><strong>Clues:</strong></p>
-      <ul>
-        <li>The crime happened in the <em>ballroom</em>.</li>
-        <li>The weapon was <em>poison</em>.</li>
-        <li>Mr. Cale was seen near the crime scene.</li>
-      </ul>
-      <p>Who is the culprit?</p>
+    <div id="quizArea">
+      <!-- Quiz will render here -->
     </div>
-    <select id="suspect" aria-label="Select your suspect">
-      <option value="" disabled selected>Choose a suspect</option>
-      <option value="Mr. Cale">Mr. Cale</option>
-      <option value="Ms. Van Cleave">Ms. Van Cleave</option>
-      <option value="Mrs. Sparr">Mrs. Sparr</option>
-      <option value="Mr. Parks">Mr. Parks</option>
-    </select>
-    <button onclick="checkAnswer()">Submit Guess</button>
     <div id="feedback" class="feedback" aria-live="polite"></div>
+    <div id="score" class="score"></div>
   </div>
-
   <script>
-    function checkAnswer() {
+    const questions = [
+      {
+        clue: `<ul>
+          <li>The crime happened in the <em>ballroom</em>.</li>
+          <li>The weapon was <em>poison</em>.</li>
+          <li>Mr. Cale was seen near the crime scene.</li>
+        </ul>
+        <p>Who is the culprit?</p>`,
+        options: ["Mr. Cale", "Ms. Van Cleave", "Mrs. Sparr", "Mr. Parks"],
+        answer: "Mr. Cale"
+      },
+      {
+        clue: `<ul>
+          <li>The painting was stolen at midnight.</li>
+          <li>Only Ms. Green and Mr. Black had keys.</li>
+          <li>Ms. Green was at a party all night.</li>
+        </ul>
+        <p>Who stole the painting?</p>`,
+        options: ["Ms. Green", "Mr. Black", "Ms. White", "Mr. Blue"],
+        answer: "Mr. Black"
+      },
+      {
+        clue: `<ul>
+          <li>The safe was opened with a code.</li>
+          <li>Only the accountant knew the code.</li>
+          <li>The code was not written anywhere.</li>
+        </ul>
+        <p>Who is the thief?</p>`,
+        options: ["The accountant", "The janitor", "The CEO", "The guard"],
+        answer: "The accountant"
+      },
+      {
+        clue: `<ul>
+          <li>The garden gnome was smashed.</li>
+          <li>There were muddy footprints from the neighbor's yard.</li>
+          <li>The dog was inside all day.</li>
+        </ul>
+        <p>Who broke the gnome?</p>`,
+        options: ["The neighbor", "The dog", "The gardener", "The mailman"],
+        answer: "The neighbor"
+      },
+      {
+        clue: `<ul>
+          <li>The cake was eaten before the party.</li>
+          <li>There were chocolate stains on Tim's shirt.</li>
+          <li>Tim said he wasn't hungry.</li>
+        </ul>
+        <p>Who ate the cake?</p>`,
+        options: ["Tim", "Sara", "Mom", "Dad"],
+        answer: "Tim"
+      },
+      {
+        clue: `<ul>
+          <li>The computer was hacked at 2am.</li>
+          <li>Only Alex and Jamie were online then.</li>
+          <li>Alex was streaming live at that time.</li>
+        </ul>
+        <p>Who is the hacker?</p>`,
+        options: ["Alex", "Jamie", "Morgan", "Taylor"],
+        answer: "Jamie"
+      },
+      {
+        clue: `<ul>
+          <li>The pie disappeared from the windowsill.</li>
+          <li>There were paw prints on the counter.</li>
+          <li>The cat looked very satisfied.</li>
+        </ul>
+        <p>Who took the pie?</p>`,
+        options: ["The cat", "The dog", "The neighbor", "The bird"],
+        answer: "The cat"
+      },
+      {
+        clue: `<ul>
+          <li>The trophy was moved to a higher shelf.</li>
+          <li>Only someone tall could reach it.</li>
+          <li>Dad is the tallest in the house.</li>
+        </ul>
+        <p>Who moved the trophy?</p>`,
+        options: ["Dad", "Mom", "Sister", "Brother"],
+        answer: "Dad"
+      },
+      {
+        clue: `<ul>
+          <li>The window was broken from the outside.</li>
+          <li>A baseball was found in the garden.</li>
+          <li>The neighbor's kids were playing baseball.</li>
+        </ul>
+        <p>Who broke the window?</p>`,
+        options: ["Neighbor's kids", "The dog", "The mailman", "Mom"],
+        answer: "Neighbor's kids"
+      },
+      {
+        clue: `<ul>
+          <li>The lights went out during the storm.</li>
+          <li>Only the fuse box was damaged.</li>
+          <li>Lightning struck the house.</li>
+        </ul>
+        <p>What caused the outage?</p>`,
+        options: ["Lightning", "The dog", "Dad", "The neighbor"],
+        answer: "Lightning"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let firstTry = true;
+
+    function renderQuestion() {
+      const q = questions[current];
+      document.getElementById('feedback').textContent = '';
+      let html = `<span class="question-number">Question ${current + 1} of ${questions.length}</span>
+        <div class="clue">${q.clue}</div>
+        <select id="suspect" aria-label="Select your answer">
+          <option value="" disabled selected>Choose an answer</option>
+          ${q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+        </select>
+        <button onclick="submitAnswer()">Submit</button>
+      `;
+      document.getElementById('quizArea').innerHTML = html;
+    }
+
+    function submitAnswer() {
       const suspect = document.getElementById('suspect').value;
       const feedback = document.getElementById('feedback');
       if (!suspect) {
-        feedback.textContent = 'Please select a suspect before submitting.';
+        feedback.textContent = 'Please select an answer before submitting.';
         feedback.className = 'feedback incorrect';
         return;
       }
-      // The correct culprit is Mr. Cale (based on clues)
-      if (suspect === 'Mr. Cale') {
-        feedback.textContent = '🎉 Correct! Mr. Cale is the culprit!';
+      if (suspect === questions[current].answer) {
+        if (firstTry) score++;
+        feedback.textContent = '🎉 Correct!';
         feedback.className = 'feedback correct';
+        setTimeout(() => {
+          current++;
+          firstTry = true;
+          if (current < questions.length) {
+            renderQuestion();
+          } else {
+            showScore();
+          }
+        }, 800);
       } else {
-        feedback.textContent = `❌ Sorry, ${suspect} is not the culprit. Try again!`;
+        feedback.textContent = `❌ Sorry, that's not correct. Try again!`;
         feedback.className = 'feedback incorrect';
+        firstTry = false;
       }
     }
+
+    function showScore() {
+      document.getElementById('quizArea').innerHTML = '';
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('score').textContent =
+        `You got ${score} out of ${questions.length} correct on your first try!`;
+    }
+
+    // Initialize
+    renderQuestion();
   </script>
 </body>
 </html>
