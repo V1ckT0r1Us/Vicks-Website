@@ -45,8 +45,8 @@
     .games-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(220px, 1fr));
-      gap: 1.8rem 2rem; /* column gap */
-      row-gap: 6rem; /* increased vertical gap for more space */
+      gap: 1.8rem 2rem;
+      row-gap: 6rem;
       width: 100%;
       max-width: 1100px;
     }
@@ -110,6 +110,49 @@
       color: var(--dark-bg);
       outline: none;
     }
+
+    /* Responsive styles */
+    @media (max-width: 950px) {
+      .games-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        max-width: 95vw;
+        gap: 1.5rem 1.2rem;
+        row-gap: 3rem;
+      }
+      .game-card {
+        height: 240px;
+        padding: 1.2rem 1rem;
+      }
+    }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+      .games-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem 0;
+        row-gap: 2rem;
+        max-width: 99vw;
+      }
+      .game-card {
+        height: auto;
+        padding: 1.1rem 0.6rem;
+      }
+      .game-icon {
+        font-size: 2.2rem;
+      }
+      .game-title {
+        font-size: 1.1rem;
+      }
+      .game-description {
+        font-size: 0.95rem;
+      }
+      .enter-btn {
+        font-size: 1rem;
+        padding: 0.6em 1.2em;
+      }
+    }
   </style>
 </head>
 <body>
@@ -167,7 +210,6 @@
 
   <script>
     function goToGame(url) {
-      // Replace with your actual game URLs or paths
       window.location.href = url;
     }
   </script>
