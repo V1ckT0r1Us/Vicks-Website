@@ -6,11 +6,20 @@
 <title>Cosmic Math Solver 🌌 with Floating Bouncing Equations & Voice</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto+Slab&display=swap');
-
+  :root {
+    --main-bg: radial-gradient(circle at center, #0a043c 0%, #000010 100%);
+    --accent: #00e5ff;
+    --accent2: #00b8cc;
+    --glow: 0 0 15px #00e5ff;
+    --shadow: #003366;
+    --equation: #00e5ffcc;
+    --equation-shadow: #00e5ff;
+    --footer: #00e5ffaa;
+  }
   body {
     margin: 0;
     overflow: hidden;
-    background: radial-gradient(circle at center, #0a043c 0%, #000010 100%);
+    background: var(--main-bg);
     color: #e4f2f9;
     font-family: 'Roboto Slab', serif;
     display: flex;
@@ -21,20 +30,18 @@
     position: relative;
     z-index: 1;
   }
-
   h1 {
     font-family: 'Orbitron', sans-serif;
     font-size: 3rem;
-    color: #00e5ff;
+    color: var(--accent);
     text-shadow:
-      0 0 5px #00e5ff,
-      0 0 10px #00e5ff,
-      0 0 20px #00e5ff,
-      0 0 40px #00e5ff;
+      0 0 5px var(--accent),
+      0 0 10px var(--accent),
+      0 0 20px var(--accent2),
+      0 0 40px var(--accent2);
     margin-bottom: 10px;
     z-index: 10;
   }
-
   #quote {
     font-style: italic;
     font-size: 1.2rem;
@@ -46,14 +53,12 @@
     transition: opacity 0.8s ease-in-out;
     z-index: 10;
   }
-
   #input-container {
     display: flex;
     max-width: 600px;
     width: 100%;
     z-index: 10;
   }
-
   #math-input {
     flex-grow: 1;
     font-size: 1.1rem;
@@ -61,65 +66,52 @@
     border: none;
     border-radius: 8px 0 0 8px;
     outline: none;
-    background: #1a0a5e;
+    background: var(--shadow);
     color: #e4f2f9;
-    box-shadow:
-      inset 0 0 10px #003366;
+    box-shadow: inset 0 0 10px var(--shadow);
   }
-
   #solve-btn, #voice-btn {
-    background: #00e5ff;
+    background: var(--accent);
     border: none;
     padding: 0 25px;
     font-size: 1.1rem;
     font-weight: bold;
     color: #0a043c;
     cursor: pointer;
-    box-shadow:
-      0 0 10px #00e5ff,
-      0 0 20px #00e5ff;
-    transition: background 0.3s ease;
+    box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent2);
+    transition: background 0.3s ease, box-shadow 0.3s;
   }
   #solve-btn:hover, #voice-btn:hover {
-    background: #00b8cc;
+    background: var(--accent2);
   }
-  #solve-btn {
-    border-radius: 0 8px 0 0;
-  }
-  #voice-btn {
-    border-radius: 0 0 8px 0;
-  }
-
+  #solve-btn { border-radius: 0 8px 0 0; }
+  #voice-btn { border-radius: 0 0 8px 0; }
   #result-container {
     margin-top: 30px;
     max-width: 600px;
     width: 100%;
-    background: #1a0a5e;
+    background: var(--shadow);
     border-radius: 12px;
     padding: 20px;
     font-family: 'Consolas', monospace;
     font-size: 1.1rem;
     min-height: 120px;
     color: #cce7ff;
-    box-shadow:
-      0 0 15px #003366;
+    box-shadow: var(--glow);
     white-space: pre-wrap;
     overflow-y: auto;
     z-index: 10;
   }
-
   #buttons-container {
     display: flex;
     flex-direction: column;
   }
-
   #starfield {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 0;
     pointer-events: none;
   }
-
   #floating-equations {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -127,27 +119,25 @@
     overflow: hidden;
     z-index: 1;
   }
-
   .equation {
     position: absolute;
-    color: #00e5ffcc;
+    color: var(--equation);
     font-family: 'Consolas', monospace;
     font-weight: bold;
     font-size: 14px;
     user-select: none;
     white-space: nowrap;
     text-shadow:
-      0 0 5px #00e5ff,
-      0 0 10px #00e5ff;
+      0 0 5px var(--equation-shadow),
+      0 0 10px var(--equation-shadow);
     will-change: transform;
   }
-
   footer {
     width: 100%;
     text-align: center;
     padding: 12px 0;
     background: transparent;
-    color: #00e5ffaa;
+    color: var(--footer);
     font-family: 'Roboto Slab', serif;
     font-size: 0.9rem;
     position: fixed;
@@ -155,7 +145,7 @@
     left: 0;
     z-index: 20;
     user-select: none;
-    text-shadow: 0 0 5px #00e5ff;
+    text-shadow: 0 0 5px var(--accent);
   }
 </style>
 </head>
@@ -220,34 +210,23 @@
       resultEl.textContent = "Please enter a math problem to solve.";
       return;
     }
-
     resultEl.textContent = "Solving...";
-
     const appId = "YOUR_WOLFRAM_ALPHA_API_KEY"; // <-- Replace with your API key
     const url = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(query)}&format=plaintext&output=JSON&appid=${appId}`;
-
     try {
       const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Network response was not ok (${response.status})`);
-      }
+      if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
       const data = await response.json();
-
       if (data.queryresult.success) {
         const pods = data.queryresult.pods;
         let answer = "";
-
         for (const pod of pods) {
           if (pod.title.toLowerCase() === "result" || pod.title.toLowerCase() === "solution") {
             answer = pod.subpods[0].plaintext;
             break;
           }
         }
-
-        if (!answer && pods.length > 0) {
-          answer = pods[0].subpods[0].plaintext;
-        }
-
+        if (!answer && pods.length > 0) answer = pods[0].subpods[0].plaintext;
         if (answer) {
           resultEl.textContent = `Query: ${query}\n\nResult:\n${answer}`;
           speakText(answer);
@@ -273,22 +252,18 @@
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
-
     recognition.onstart = () => {
       voiceBtn.textContent = "🎙️ Listening...";
       voiceBtn.disabled = true;
     };
-
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       inputEl.value = transcript;
       solveMath(transcript);
     };
-
     recognition.onerror = (event) => {
       resultEl.textContent = `Voice recognition error: ${event.error}`;
     };
-
     recognition.onend = () => {
       voiceBtn.textContent = "🎙️";
       voiceBtn.disabled = false;
@@ -297,34 +272,25 @@
     voiceBtn.disabled = true;
     voiceBtn.title = "Voice recognition not supported in this browser";
   }
-
   voiceBtn.addEventListener('click', () => {
-    if (recognition) {
-      recognition.start();
-    }
+    if (recognition) recognition.start();
   });
 
   // Speech synthesis
   function speakText(text) {
     if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
+    if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     utterance.rate = 1;
     window.speechSynthesis.speak(utterance);
   }
 
-  // Event listeners
   solveBtn.addEventListener('click', () => {
     solveMath(inputEl.value);
   });
-
   inputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      solveMath(inputEl.value);
-    }
+    if (e.key === 'Enter') solveMath(inputEl.value);
   });
 
   // Cosmic starfield animation
@@ -332,14 +298,13 @@
   const ctx = canvas.getContext('2d');
   let stars = [];
   let width, height;
-
+  let starColor = getComputedStyle(document.documentElement).getPropertyValue('--accent');
   function Star() {
     this.x = Math.random() * width;
     this.y = Math.random() * height;
     this.size = Math.random() * 1.5 + 0.5;
     this.speed = (this.size * 0.3) + 0.1;
   }
-
   Star.prototype.update = function() {
     this.y -= this.speed;
     if (this.y < 0) {
@@ -349,23 +314,20 @@
       this.speed = (this.size * 0.3) + 0.1;
     }
   };
-
   Star.prototype.draw = function() {
     ctx.beginPath();
-    ctx.fillStyle = '#00e5ff';
-    ctx.shadowColor = '#00e5ff';
+    ctx.fillStyle = starColor;
+    ctx.shadowColor = starColor;
     ctx.shadowBlur = 8;
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
   };
-
   function initStars() {
     stars = [];
     for (let i = 0; i < 150; i++) {
       stars.push(new Star());
     }
   }
-
   function resize() {
     width = window.innerWidth;
     height = window.innerHeight;
@@ -373,7 +335,6 @@
     canvas.height = height;
     initStars();
   }
-
   function animate() {
     ctx.clearRect(0, 0, width, height);
     stars.forEach(star => {
@@ -382,55 +343,33 @@
     });
     requestAnimationFrame(animate);
   }
-
   window.addEventListener('resize', resize);
   resize();
   animate();
 
   // Floating bouncing math equations
   const floatingContainer = document.getElementById('floating-equations');
-
   const equations = [
-    "E=mc²",
-    "∫ sin(x) dx",
-    "a² + b² = c²",
-    "f'(x)",
-    "∑ n=1^∞ 1/n² = π²/6",
-    "x = (-b ± √(b²-4ac)) / 2a",
-    "∂/∂x",
-    "limₓ→∞ (1 + 1/x)^x = e",
-    "d/dx eˣ = eˣ",
-    "√(2)",
-    "π ≈ 3.14159",
-    "logₐ(b)",
-    "sin²θ + cos²θ = 1",
-    "∫₀^∞ e^{-x} dx = 1",
-    "Δy/Δx",
-    "∇·E = ρ/ε₀"
+    "E=mc²", "∫ sin(x) dx", "a² + b² = c²", "f'(x)",
+    "∑ n=1^∞ 1/n² = π²/6", "x = (-b ± √(b²-4ac)) / 2a", "∂/∂x",
+    "limₓ→∞ (1 + 1/x)^x = e", "d/dx eˣ = eˣ", "√(2)", "π ≈ 3.14159",
+    "logₐ(b)", "sin²θ + cos²θ = 1", "∫₀^∞ e^{-x} dx = 1", "Δy/Δx", "∇·E = ρ/ε₀"
   ];
-
   const floatingEquations = [];
-
   function createEquation() {
     const eq = document.createElement('div');
     eq.classList.add('equation');
     eq.textContent = equations[Math.floor(Math.random() * equations.length)];
-
     const x = Math.random() * (window.innerWidth - 100);
     const y = Math.random() * (window.innerHeight - 30);
-
     eq.style.left = x + 'px';
     eq.style.top = y + 'px';
-
     const scale = 0.6 + Math.random() * 0.8;
     eq.style.fontSize = (14 * scale) + 'px';
     eq.style.opacity = 0.3 + Math.random() * 0.5;
-
     floatingContainer.appendChild(eq);
-
     const speedX = (Math.random() * 1.2 + 0.2) * (Math.random() < 0.5 ? 1 : -1);
     const speedY = (Math.random() * 1.2 + 0.2) * (Math.random() < 0.5 ? 1 : -1);
-
     return {
       el: eq,
       x: x,
@@ -443,16 +382,13 @@
       scale: scale
     };
   }
-
   for(let i=0; i<30; i++) {
     floatingEquations.push(createEquation());
   }
-
   function animateEquations() {
     floatingEquations.forEach(eq => {
       eq.x += eq.speedX;
       eq.y += eq.speedY;
-
       if(eq.x <= 0) {
         eq.x = 0;
         eq.speedX = -eq.speedX;
@@ -460,7 +396,6 @@
         eq.x = window.innerWidth - eq.width;
         eq.speedX = -eq.speedX;
       }
-
       if(eq.y <= 0) {
         eq.y = 0;
         eq.speedY = -eq.speedY;
@@ -468,22 +403,94 @@
         eq.y = window.innerHeight - eq.height;
         eq.speedY = -eq.speedY;
       }
-
       eq.el.style.transform = `translate(${eq.x}px, ${eq.y}px) scale(${eq.scale})`;
       eq.el.style.opacity = eq.opacity;
     });
-
     requestAnimationFrame(animateEquations);
   }
-
   animateEquations();
-
   window.addEventListener('resize', () => {
     floatingEquations.forEach(eq => {
       eq.x = Math.min(eq.x, window.innerWidth - eq.width);
       eq.y = Math.min(eq.y, window.innerHeight - eq.height);
     });
   });
+
+  // === Dynamic Theme Changer ===
+  const palettes = [
+    // Blue/Cyan
+    {
+      '--main-bg': 'radial-gradient(circle at center, #0a043c 0%, #000010 100%)',
+      '--accent': '#00e5ff',
+      '--accent2': '#00b8cc',
+      '--glow': '0 0 15px #00e5ff',
+      '--shadow': '#003366',
+      '--equation': '#00e5ffcc',
+      '--equation-shadow': '#00e5ff',
+      '--footer': '#00e5ffaa'
+    },
+    // Purple/Neon
+    {
+      '--main-bg': 'linear-gradient(135deg, #3a3d5c, #2c3e50 90%)',
+      '--accent': '#9b59b6',
+      '--accent2': '#3498db',
+      '--glow': '0 0 15px #9b59b6',
+      '--shadow': '#9b59b6',
+      '--equation': '#b67affcc',
+      '--equation-shadow': '#9b59b6',
+      '--footer': '#b67aff'
+    },
+    // Pink/Indigo
+    {
+      '--main-bg': 'linear-gradient(135deg, #e84393, #6c5ce7 90%)',
+      '--accent': '#fd79a8',
+      '--accent2': '#00b894',
+      '--glow': '0 0 15px #fd79a8',
+      '--shadow': '#e84393',
+      '--equation': '#fd79a8cc',
+      '--equation-shadow': '#e84393',
+      '--footer': '#fd79a8'
+    },
+    // Green/Teal
+    {
+      '--main-bg': 'linear-gradient(135deg, #16a085, #1abc9c 90%)',
+      '--accent': '#00ffae',
+      '--accent2': '#16a085',
+      '--glow': '0 0 15px #00ffae',
+      '--shadow': '#16a085',
+      '--equation': '#00ffaecc',
+      '--equation-shadow': '#00ffae',
+      '--footer': '#00ffae'
+    }
+  ];
+  let paletteIndex = 0;
+  function applyPalette(p) {
+    document.body.style.background = p['--main-bg'];
+    document.querySelector('h1').style.color = p['--accent'];
+    document.querySelector('h1').style.textShadow =
+      `0 0 5px ${p['--accent']},0 0 10px ${p['--accent']},0 0 20px ${p['--accent2']},0 0 40px ${p['--accent2']}`;
+    document.querySelectorAll('#solve-btn, #voice-btn').forEach(btn => {
+      btn.style.background = p['--accent'];
+      btn.style.boxShadow = `0 0 10px ${p['--accent']},0 0 20px ${p['--accent2']}`;
+    });
+    document.getElementById('math-input').style.background = p['--shadow'];
+    document.getElementById('math-input').style.boxShadow = `inset 0 0 10px ${p['--shadow']}`;
+    document.getElementById('result-container').style.background = p['--shadow'];
+    document.getElementById('result-container').style.boxShadow = p['--glow'];
+    document.querySelectorAll('.equation').forEach(eq => {
+      eq.style.color = p['--equation'];
+      eq.style.textShadow = `0 0 5px ${p['--equation-shadow']},0 0 10px ${p['--equation-shadow']}`;
+    });
+    document.querySelector('footer').style.color = p['--footer'];
+    document.querySelector('footer').style.textShadow = `0 0 5px ${p['--accent']}`;
+    starColor = p['--accent'];
+  }
+  function nextPalette() {
+    paletteIndex = (paletteIndex + 1) % palettes.length;
+    applyPalette(palettes[paletteIndex]);
+  }
+  applyPalette(palettes[paletteIndex]);
+  setInterval(nextPalette, 30000);
 </script>
 
 </body>
