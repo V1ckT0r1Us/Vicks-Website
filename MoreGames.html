@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Choose Your Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+      text-align: center;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 1.8rem 2rem; /* column gap */
+      row-gap: 6rem; /* increased vertical gap for more space */
+      width: 100%;
+      max-width: 1100px;
+    }
+    .game-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 260px;
+      position: relative;
+      z-index: 0;
+    }
+    .game-card:hover, .game-card:focus-within {
+      transform: translateY(-8px);
+      box-shadow: 0 0 30px var(--neon-accent);
+      z-index: 10;
+    }
+    .game-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      user-select: none;
+      text-shadow: 0 0 10px var(--neon-accent);
+    }
+    .game-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: var(--neon-accent);
+    }
+    .game-description {
+      font-size: 1rem;
+      color: #ddd;
+      flex-grow: 1;
+      margin-bottom: 1.2rem;
+    }
+    .enter-btn {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7em 1.8em;
+      font-size: 1.1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 10px var(--neon-accent);
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+      z-index: 20;
+      position: relative;
+    }
+    .enter-btn:hover, .enter-btn:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 20px var(--neon-accent);
+      color: var(--dark-bg);
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Select a Game to Play</h1>
+  <div class="games-grid">
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🧩</div>
+      <div class="game-title">Jigsaw Puzzle</div>
+      <div class="game-description">Piece together the image by dragging and dropping puzzle pieces.</div>
+      <button class="enter-btn" onclick="goToGame('jigsaw.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🧮</div>
+      <div class="game-title">Math Puzzle</div>
+      <div class="game-description">Test your skills with challenging math riddles and identities.</div>
+      <button class="enter-btn" onclick="goToGame('math-puzzle.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🎯</div>
+      <div class="game-title">Target Practice</div>
+      <div class="game-description">Sharpen your reflexes by hitting moving targets accurately.</div>
+      <button class="enter-btn" onclick="goToGame('target-practice.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🕵️‍♂️</div>
+      <div class="game-title">Mystery Solver</div>
+      <div class="game-description">Solve clues and unravel mysteries in this interactive adventure.</div>
+      <button class="enter-btn" onclick="goToGame('mystery-solver.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🚀</div>
+      <div class="game-title">Space Explorer</div>
+      <div class="game-description">Explore the cosmos and complete missions in outer space.</div>
+      <button class="enter-btn" onclick="goToGame('space-explorer.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🧙‍♂️</div>
+      <div class="game-title">Wizard's Quest</div>
+      <div class="game-description">Cast spells and solve magical puzzles in a mystical world.</div>
+      <button class="enter-btn" onclick="goToGame('wizards-quest.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🏎️</div>
+      <div class="game-title">Speed Racer</div>
+      <div class="game-description">Race against time and opponents on thrilling tracks.</div>
+      <button class="enter-btn" onclick="goToGame('speed-racer.html')">Enter</button>
+    </div>
+    <div class="game-card" tabindex="0">
+      <div class="game-icon">🧟‍♂️</div>
+      <div class="game-title">Zombie Survival</div>
+      <div class="game-description">Survive waves of zombies in this intense action game.</div>
+      <button class="enter-btn" onclick="goToGame('zombie-survival.html')">Enter</button>
+    </div>
+  </div>
+
+  <script>
+    function goToGame(url) {
+      // Replace with your actual game URLs or paths
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>
