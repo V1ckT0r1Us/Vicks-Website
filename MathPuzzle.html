@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Math Puzzle - Equation of a Circle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --math-purple: #3a3d5c;
+      --code-blue: #3498db;
+      --neon-accent: #9b59b6;
+      --dark-bg: #2c3e50;
+      --light-bg: #ecf0f1;
+      --glow: 0 0 15px rgba(155, 89, 182, 0.7);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--math-purple), var(--dark-bg));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .puzzle-container {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: 2.5rem 2rem;
+      max-width: 460px;
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(45deg, var(--neon-accent), var(--code-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowPulse 2s infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--neon-accent), 0 0 20px var(--neon-accent);}
+      50% { text-shadow: 0 0 20px var(--code-blue), 0 0 30px var(--code-blue);}
+    }
+    .riddle {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: #f6e9ff;
+      line-height: 1.5;
+    }
+    .equation {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.5rem;
+      margin: 1rem 0 1.5rem;
+      color: var(--neon-accent);
+      user-select: none;
+    }
+    input[type="text"] {
+      padding: 0.7em 1em;
+      border-radius: 10px;
+      border: none;
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      width: 80%;
+      outline: none;
+      background: #fff;
+      color: var(--dark-bg);
+      box-shadow: 0 0 8px var(--neon-accent);
+      transition: box-shadow 0.2s;
+      text-align: center;
+    }
+    input[type="text"]:focus {
+      box-shadow: 0 0 15px var(--code-blue);
+    }
+    button {
+      background: linear-gradient(135deg, var(--code-blue), var(--neon-accent));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7em 2em;
+      font-size: 1.1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 0 10px var(--neon-accent);
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(135deg, var(--neon-accent), var(--code-blue));
+      box-shadow: 0 0 20px var(--neon-accent);
+      color: var(--dark-bg);
+    }
+    .success {
+      color: #00ffae;
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-shadow: 0 0 8px var(--neon-accent);
+    }
+    .error {
+      color: #ff4c7d;
+      margin-top: 1.2rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="puzzle-container">
+    <h1>Solve the Puzzle!</h1>
+    <div class="riddle">
+      Given the standard form of the equation of a circle:<br />
+      <div class="equation">(x - h)<sup>2</sup> + (y - k)<sup>2</sup> = ?</div>
+      What is the value on the right side of the equation?<br />
+    </div>
+    <input type="text" id="answer" placeholder="Your answer..." autocomplete="off" />
+    <br />
+    <button onclick="checkAnswer()">Submit</button>
+    <div id="feedback"></div>
+  </div>
+  <script>
+    function checkAnswer() {
+      const input = document.getElementById('answer');
+      const feedback = document.getElementById('feedback');
+      const value = input.value.trim().toLowerCase().replace(/\s+/g, '');
+      // Accept answers like r^2, r2, r squared, r squared symbol etc.
+      const validAnswers = ['r^2', 'r2', 'r²', 'r-squared', 'r squared', 'radius squared'];
+      if (validAnswers.includes(value)) {
+        feedback.innerHTML = '<div class="success">Correct! The right side is the radius squared, \(r^2\).</div>';
+      } else {
+        feedback.innerHTML = '<div class="error">Try again! Hint: It represents the square of the radius.</div>';
+      }
+    }
+    document.getElementById('answer').addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') checkAnswer();
+    });
+  </script>
+</body>
+</html>
